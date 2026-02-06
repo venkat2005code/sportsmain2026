@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | TITAN SPORTS</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#DC2626',
+                            dark: '#0a0a0a',
+                            gray: '#171717'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body
+    class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-brand-dark border-b border-white/10 transition-all duration-300">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <ion-icon name="flash" class="text-2xl sm:text-3xl text-brand-red"></ion-icon>
+                        <span class="font-heading text-lg sm:text-2xl font-bold tracking-wider">TITAN<span
+                                class="text-brand-red">SPORTS</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse">
+                    <!-- Home Dropdown -->
+                    <div class="relative group">
+                        <button data-dropdown-toggle="home-dropdown"
+                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
+                            Home <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
+                        </button>
+                        <div id="home-dropdown" data-dropdown-menu
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            <a href="index.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                1</a>
+                            <a href="home2.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                2</a>
+                        </div>
+                    </div>
+
+                    <a href="shop.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Shop</a>
+                    <a href="categories.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Categories</a>
+                    <a href="offers.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Offers</a>
+
+                    <!-- Dashboard Dropdown -->
+                    <div class="relative group">
+                        <button data-dropdown-toggle="dashboard-dropdown"
+                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">
+                            Dashboard <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
+                        </button>
+                        <div id="dashboard-dropdown" data-dropdown-menu
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            <a href="user-dashboard.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">User
+                                Dashboard</a>
+                            <a href="admin-dashboard.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Admin
+                                Dashboard</a>
+                        </div>
+                    </div>
+
+                    <a href="about.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">About</a>
+                    <a href="contact.html"
+                        class="text-brand-red font-bold px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Contact</a>
+                </div>
+
+                <!-- Icons & Mobile Button -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- RTL Toggle -->
+                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-gray-300 hover:text-brand-red transition-colors"
+                        title="Toggle Language Direction">
+                        <ion-icon name="globe-outline" class="text-xl sm:text-2xl"></ion-icon>
+                    </button>
+
+                    <a href="login.html"
+                        class="hidden md:block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors">
+                        Login
+                    </a>
+
+                    <a href="signup.html"
+                        class="hidden md:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
+                        Join
+                    </a>
+
+                    <!-- Mobile menu button -->
+                    <div class="flex lg:hidden">
+                        <button id="mobile-menu-btn"
+                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                            <ion-icon name="menu-outline" class="text-2xl sm:text-3xl"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-white/10">
+            <div class="px-4 sm:px-6 lg:px-8 pt-2 pb-3 space-y-1 text-center">
+                <!-- Mobile Home Dropdown -->
+                <div class="space-y-1">
+                    <button data-dropdown-toggle="mobile-home-dropdown"
+                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
+                        Home <ion-icon name="chevron-down-outline"></ion-icon>
+                    </button>
+                    <div id="mobile-home-dropdown" data-dropdown-menu
+                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
+                        <a href="index.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            1</a>
+                        <a href="home2.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            2</a>
+                    </div>
+                </div>
+
+                <a href="shop.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Shop</a>
+                <a href="categories.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Categories</a>
+                <a href="offers.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Offers</a>
+
+                <!-- Mobile Dashboard Dropdown -->
+                <div class="space-y-1">
+                    <button data-dropdown-toggle="mobile-dashboard-dropdown"
+                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase">
+                        Dashboard <ion-icon name="chevron-down-outline"></ion-icon>
+                    </button>
+                    <div id="mobile-dashboard-dropdown" data-dropdown-menu
+                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
+                        <a href="user-dashboard.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">User
+                            Dashboard</a>
+                        <a href="admin-dashboard.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Admin
+                            Dashboard</a>
+                    </div>
+                </div>
+
+                <a href="about.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">About</a>
+                <a href="contact.html"
+                    class="text-brand-red font-bold block px-3 py-2 rounded-md text-base uppercase">Contact</a>                
+                <!-- Mobile Auth Links -->
+                <div class="pt-4 border-t border-white/10 mt-4 flex flex-col gap-2 px-4">
+                    <a href="login.html"
+                        class="block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors py-2">
+                        Login
+                    </a>
+                    <a href="signup.html"
+                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all text-center">
+                        Join Now
+                    </a>
+                </div>            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h1 class="font-heading text-4xl md:text-5xl font-bold uppercase mb-4">Get In <span
+                        class="text-brand-red">Touch</span></h1>
+                <p class="text-gray-400 max-w-2xl mx-auto">Have a question? We're here to help. Reach out to our team.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-brand-gray p-8 rounded-2xl border border-white/10">
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="first-name"
+                                    class="block text-sm font-medium text-gray-400 mb-2 uppercase">First Name</label>
+                                <input type="text" id="first-name"
+                                    class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                            </div>
+                            <div>
+                                <label for="last-name"
+                                    class="block text-sm font-medium text-gray-400 mb-2 uppercase">Last Name</label>
+                                <input type="text" id="last-name"
+                                    class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="email"
+                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Email</label>
+                            <input type="email" id="email"
+                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                        </div>
+                        <div>
+                            <label for="subject"
+                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Subject</label>
+                            <select id="subject"
+                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                                <option>Order Inquiry</option>
+                                <option>Product Support</option>
+                                <option>Partnership</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message"
+                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Message</label>
+                            <textarea id="message" rows="4"
+                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red"></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-brand-red hover:bg-red-700 text-white font-bold py-4 rounded-md uppercase tracking-wider transition-all transform hover:scale-[1.02]">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info & Map -->
+                <div class="space-y-8">
+                    <!-- Info Cards -->
+                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                        <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
+                            <ion-icon name="location-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg uppercase mb-1">Our Location</h3>
+                            <p class="text-gray-400">123 Sport Ave, Athletic City, SP 90210</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                        <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
+                            <ion-icon name="mail-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg uppercase mb-1">Email Us</h3>
+                            <p class="text-gray-400">support@titansports.com</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                        <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
+                            <ion-icon name="call-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg uppercase mb-1">Call Us</h3>
+                            <p class="text-gray-400">+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <!-- Map Placeholder -->
+                    <div
+                        class="w-full h-64 bg-white/5 rounded-2xl border border-white/10 overflow-hidden relative group">
+                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop"
+                            class="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="bg-black/80 px-4 py-2 rounded text-sm font-bold uppercase tracking-wide">View
+                                on Google Maps</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FAQ Section -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+        <h2 class="font-heading text-3xl font-bold uppercase mb-8 text-center">Frequently Asked <span
+                class="text-brand-red">Questions</span></h2>
+        <div class="space-y-4">
+            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+                <h3 class="font-bold text-lg mb-2">How do I track my order?</h3>
+                <p class="text-gray-400 text-sm">Once your order ships, you will receive an email with a tracking
+                    number. You can also track it in your dashboard.</p>
+            </div>
+            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+                <h3 class="font-bold text-lg mb-2">What is your return policy?</h3>
+                <p class="text-gray-400 text-sm">We offer a 30-day return policy for unused items in original packaging.
+                    Contact support to initiate a return.</p>
+            </div>
+            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+                <h3 class="font-bold text-lg mb-2">Do you ship internationally?</h3>
+                <p class="text-gray-400 text-sm">Yes, we ship to over 50 countries worldwide. Shipping times vary by
+                    location.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="bg-brand-gray py-12 mt-20 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-heading text-3xl font-bold uppercase mb-4">Join The <span class="text-brand-red">Team</span>
+            </h2>
+            <p class="text-gray-400 mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for early access to drops,
+                exclusive discounts, and training tips from the pros.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
+                <input type="email" placeholder="Your email address"
+                    class="flex-grow bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red transition-colors">
+                <button
+                    class="bg-brand-red hover:bg-red-700 text-white font-bold px-8 py-3 rounded-md uppercase tracking-wide transition-colors">Sign
+                    Up</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black border-t border-white/10 pt-16 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                <!-- Branding -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
+                        <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
+                                class="text-brand-red">SPORTS</span></span>
+                    </a>
+                    <p class="text-gray-500 text-sm mb-6">
+                        Equipping athletes with world-class gear. Designed for performance, built for champions.
+                    </p>
+                    <!-- Social Icons -->
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-instagram"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-youtube"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Shop Links -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="shop.html" class="hover:text-brand-red transition-colors">All Products</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">Best Sellers</a></li>
+                        <li><a href="offers.html" class="hover:text-brand-red transition-colors">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="about.html" class="hover:text-brand-red transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
+                        <li><a href="categories.html" class="hover:text-brand-red transition-colors">Categories</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Newsletter</h4>
+                    <p class="text-gray-500 text-sm mb-4">Subscribe for updates and exclusive offers.</p>
+                    <div class="flex flex-col gap-3">
+                        <input type="email" placeholder="Enter your email"
+                            class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-red transition-colors">
+                        <button
+                            class="bg-brand-red hover:bg-red-700 text-white font-bold py-2 rounded-md uppercase tracking-wide text-sm transition-colors">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-8 border-t border-white/10 text-gray-600 text-xs">
+                &copy; 2024 Titan Sports. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

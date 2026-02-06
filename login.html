@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITAN SPORTS | Member Access</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#DC2626',
+                            dark: '#050505',
+                            black: '#000000',
+                            gray: '#121212'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Oswald:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body class="bg-black text-white font-sans antialiased overflow-hidden h-screen">
+
+    <div class="h-full w-full flex">
+
+        <!-- Left Side: Visual (Hidden on Mobile) -->
+        <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-brand-gray">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070&auto=format&fit=crop"
+                    alt="Athlete"
+                    class="w-full h-full object-cover grayscale opacity-60 scale-105 hover:scale-100 transition-transform duration-[20s] ease-linear">
+            </div>
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80"></div>
+
+            <!-- Branding/Quote -->
+            <div class="relative z-10 w-full h-full flex flex-col justify-between p-12">
+                <a href="index.html" class="flex items-center gap-2">
+                    <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
+                    <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
+                            class="text-brand-red">SPORTS</span></span>
+                </a>
+
+                <div class="animate-slide-up">
+                    <h2 class="font-heading text-6xl font-bold uppercase leading-tight mb-4">
+                        Focus.<br>Discipline.<br><span class="text-brand-red">Victory.</span></h2>
+                    <p class="text-gray-400 max-w-md">"The only way to prove that you’re a good sport is to lose." –
+                        Ernie Banks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-black relative">
+
+            <!-- Mobile Logo (Visible only on Mobile) -->
+            <div class="absolute top-8 left-8 lg:hidden rtl:left-auto rtl:right-8">
+                <a href="index.html" class="flex items-center gap-2">
+                    <ion-icon name="flash" class="text-2xl text-brand-red"></ion-icon>
+                    <span class="font-heading text-xl font-bold tracking-wider">TITAN<span
+                            class="text-brand-red">SPORTS</span></span>
+                </a>
+            </div>
+
+            <!-- Top Right Actions: RTL Toggle + Join Link -->
+            <div class="absolute top-8 right-8 rtl:right-auto rtl:left-8 flex items-center gap-3 sm:gap-4">
+                <!-- RTL Toggle -->
+                <button id="rtl-toggle" 
+                    class="p-2 text-gray-500 hover:text-brand-red transition-colors rounded-full hover:bg-white/5" 
+                    title="Toggle Language Direction">
+                    <ion-icon name="globe-outline" class="text-lg sm:text-xl"></ion-icon>
+                </button>
+                <!-- Join Link -->
+                <a href="signup.html"
+                    class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hidden sm:inline">
+                    Not a member? <span class="text-brand-red ml-1 rtl:ml-0 rtl:mr-1">Join Now</span>
+                </a>
+                <a href="signup.html"
+                    class="text-xs font-bold uppercase tracking-widest text-brand-red hover:text-white transition-colors sm:hidden">
+                    Join
+                </a>
+            </div>
+
+            <div class="w-full max-w-sm animate-fade-in">
+                <!-- Header -->
+                <div class="mb-12">
+                    <h3 class="text-brand-red text-xs font-bold uppercase tracking-[0.2em] mb-2">Welcome Back</h3>
+                    <h1 class="font-heading text-4xl font-bold uppercase">Log In</h1>
+                </div>
+
+                <!-- Form -->
+                <form class="space-y-8">
+
+                    <!-- Email -->
+                    <div class="group relative">
+                        <input type="email" id="email" required
+                            class="peer w-full bg-transparent border-b border-white/20 py-3 text-lg text-white focus:outline-none focus:border-brand-red transition-all placeholder-transparent">
+                        <label for="email"
+                            class="absolute left-0 top-3 text-gray-500 text-sm uppercase tracking-widest transition-all rtl:left-auto rtl:right-0 
+                                      peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 
+                                      peer-focus:-top-4 peer-focus:text-xs peer-focus:text-brand-red peer-valid:-top-4 peer-valid:text-xs">
+                            Email Address
+                        </label>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="group relative">
+                        <input type="password" id="password" required
+                            class="peer w-full bg-transparent border-b border-white/20 py-3 text-lg text-white focus:outline-none focus:border-brand-red transition-all placeholder-transparent">
+                        <label for="password"
+                            class="absolute left-0 top-3 text-gray-500 text-sm uppercase tracking-widest transition-all rtl:left-auto rtl:right-0 
+                                      peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 
+                                      peer-focus:-top-4 peer-focus:text-xs peer-focus:text-brand-red peer-valid:-top-4 peer-valid:text-xs">
+                            Password
+                        </label>
+                        <a href="#"
+                            class="absolute right-0 top-4 text-xs text-gray-600 hover:text-white transition-colors uppercase tracking-wider rtl:right-auto rtl:left-0">Forgot?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="button" onclick="window.location.href='user-dashboard.html'"
+                        class="w-full bg-brand-red text-white font-bold h-14 uppercase tracking-[0.15em] hover:bg-white hover:text-black transition-all duration-300">
+                        Enter Dashboard
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="flex items-center gap-4 py-2">
+                        <div class="h-[1px] bg-white/10 flex-grow"></div>
+                        <span class="text-gray-600 text-xs uppercase tracking-widest">Or</span>
+                        <div class="h-[1px] bg-white/10 flex-grow"></div>
+                    </div>
+
+                    <!-- Socials Minimal -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button"
+                            class="h-12 border border-white/10 hover:border-white text-gray-400 hover:text-white flex items-center justify-center gap-2 transition-all">
+                            <ion-icon name="logo-google" class="text-lg"></ion-icon> <span
+                                class="text-xs uppercase tracking-wider">Google</span>
+                        </button>
+                        <button type="button"
+                            class="h-12 border border-white/10 hover:border-white text-gray-400 hover:text-white flex items-center justify-center gap-2 transition-all">
+                            <ion-icon name="logo-apple" class="text-lg"></ion-icon> <span
+                                class="text-xs uppercase tracking-wider">Apple</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

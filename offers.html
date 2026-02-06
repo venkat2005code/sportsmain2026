@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offers | TITAN SPORTS</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#DC2626',
+                            dark: '#0a0a0a',
+                            gray: '#171717'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body
+    class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-brand-dark border-b border-white/10 transition-all duration-300">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <ion-icon name="flash" class="text-2xl sm:text-3xl text-brand-red"></ion-icon>
+                        <span class="font-heading text-lg sm:text-2xl font-bold tracking-wider">TITAN<span
+                                class="text-brand-red">SPORTS</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse">
+                    <!-- Home Dropdown -->
+                    <div class="relative group">
+                        <button data-dropdown-toggle="home-dropdown"
+                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
+                            Home <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
+                        </button>
+                        <div id="home-dropdown" data-dropdown-menu
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            <a href="index.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                1</a>
+                            <a href="home2.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                2</a>
+                        </div>
+                    </div>
+
+                    <a href="shop.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Shop</a>
+                    <a href="categories.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Categories</a>
+                    <a href="offers.html"
+                        class="text-brand-red font-bold px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Offers</a>
+
+                    <!-- Dashboard Dropdown -->
+                    <div class="relative group">
+                        <button data-dropdown-toggle="dashboard-dropdown"
+                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">
+                            Dashboard <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
+                        </button>
+                        <div id="dashboard-dropdown" data-dropdown-menu
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            <a href="user-dashboard.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">User
+                                Dashboard</a>
+                            <a href="admin-dashboard.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Admin
+                                Dashboard</a>
+                        </div>
+                    </div>
+
+                    <a href="about.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">About</a>
+                    <a href="contact.html"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Contact</a>
+                </div>
+
+                <!-- Icons & Mobile Button -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- RTL Toggle -->
+                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-gray-300 hover:text-brand-red transition-colors"
+                        title="Toggle Language Direction">
+                        <ion-icon name="globe-outline" class="text-xl sm:text-2xl"></ion-icon>
+                    </button>
+
+                    <a href="login.html"
+                        class="hidden md:block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors">
+                        Login
+                    </a>
+
+                    <a href="signup.html"
+                        class="hidden md:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
+                        Join
+                    </a>
+
+                    <!-- Mobile menu button -->
+                    <div class="flex lg:hidden">
+                        <button id="mobile-menu-btn"
+                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                            <ion-icon name="menu-outline" class="text-2xl sm:text-3xl"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-white/10">
+            <div class="px-4 sm:px-6 lg:px-8 pt-2 pb-3 space-y-1 text-center">
+                <!-- Mobile Home Dropdown -->
+                <div class="space-y-1">
+                    <button data-dropdown-toggle="mobile-home-dropdown"
+                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
+                        Home <ion-icon name="chevron-down-outline"></ion-icon>
+                    </button>
+                    <div id="mobile-home-dropdown" data-dropdown-menu
+                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
+                        <a href="index.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            1</a>
+                        <a href="home2.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            2</a>
+                    </div>
+                </div>
+
+                <a href="shop.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Shop</a>
+                <a href="categories.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Categories</a>
+                <a href="offers.html"
+                    class="text-brand-red font-bold block px-3 py-2 rounded-md text-base uppercase">Offers</a>
+
+                <!-- Mobile Dashboard Dropdown -->
+                <div class="space-y-1">
+                    <button data-dropdown-toggle="mobile-dashboard-dropdown"
+                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase">
+                        Dashboard <ion-icon name="chevron-down-outline"></ion-icon>
+                    </button>
+                    <div id="mobile-dashboard-dropdown" data-dropdown-menu
+                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
+                        <a href="user-dashboard.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">User
+                            Dashboard</a>
+                        <a href="admin-dashboard.html"
+                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Admin
+                            Dashboard</a>
+                    </div>
+                </div>
+
+                <a href="about.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">About</a>
+                <a href="contact.html"
+                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Contact</a>
+                
+                <!-- Mobile Auth Links -->
+                <div class="pt-4 border-t border-white/10 mt-4 flex flex-col gap-2 px-4">
+                    <a href="login.html"
+                        class="block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors py-2">
+                        Login
+                    </a>
+                    <a href="signup.html"
+                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all text-center">
+                        Join Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h1 class="font-heading text-4xl md:text-5xl font-bold uppercase mb-4">Exclusive <span
+                        class="text-brand-red">Offers</span></h1>
+                <p class="text-gray-400 max-w-2xl mx-auto">Limited time deals on top-tier equipment. Don't miss out on
+                    these game-changing discounts.</p>
+            </div>
+
+            <div class="space-y-12">
+                <!-- Large Promotional Banner -->
+                <div
+                    class="relative rounded-3xl overflow-hidden bg-brand-gray border border-white/10 h-80 md:h-96 flex flex-col justify-center px-8 md:px-16">
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2000&auto=format&fit=crop"
+                            alt="Summer Sale Training Gear" loading="eager"
+                            class="w-full h-full object-cover opacity-60 mix-blend-overlay">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+                    </div>
+
+                    <div class="relative z-10 w-full md:w-2/3">
+                        <span
+                            class="inline-block bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">Summer
+                            Sale</span>
+                        <h2 class="font-heading text-4xl md:text-6xl font-bold uppercase leading-tight mb-4">Up to 50%
+                            Off <br> <span class="text-brand-red">Training Gear</span></h2>
+                        <a href="shop.html"
+                            class="inline-block bg-white text-brand-dark px-8 py-3 rounded-full font-bold uppercase tracking-wide hover:bg-gray-200 transition-colors">Shop
+                            Sale</a>
+                    </div>
+                </div>
+
+                <!-- Flash Deal -->
+                <div
+                    class="bg-gradient-to-r from-brand-red to-red-800 rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl">
+                    <div
+                        class="absolute top-0 right-0 p-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl animate-pulse">
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                        <div class="text-center md:text-left">
+                            <h3 class="font-heading text-3xl font-bold uppercase mb-2">Flash Sale Ends In:</h3>
+                            <div class="flex gap-4 justify-center md:justify-start">
+                                <div class="bg-black/20 p-3 rounded-lg min-w-[60px] text-center border border-white/10">
+                                    <span class="block text-2xl font-bold font-heading">03</span>
+                                    <span class="text-xs opacity-75">Hrs</span>
+                                </div>
+                                <div class="bg-black/20 p-3 rounded-lg min-w-[60px] text-center border border-white/10">
+                                    <span class="block text-2xl font-bold font-heading">12</span>
+                                    <span class="text-xs opacity-75">Min</span>
+                                </div>
+                                <div class="bg-black/20 p-3 rounded-lg min-w-[60px] text-center border border-white/10">
+                                    <span
+                                        class="block text-2xl font-bold font-heading text-brand-red bg-white rounded px-1 animate-pulse">45</span>
+                                    <span class="text-xs opacity-75">Sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl font-medium mb-1">Extra 20% Off All Clearance</p>
+                            <p class="text-sm opacity-80 mb-4">Use code: <span
+                                    class="font-mono font-bold bg-white/20 px-2 py-1 rounded">FLASH20</span> at checkout
+                            </p>
+                            <a href="#"
+                                class="inline-block bg-white text-brand-red px-6 py-2 rounded-full font-bold uppercase text-sm hover:bg-black hover:text-white transition-colors">Shop
+                                Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offers Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Offer 1 -->
+                    <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-brand-gray group">
+                        <div class="absolute top-0 right-0 p-4 z-10">
+                            <div
+                                class="bg-brand-red text-white font-heading font-bold px-4 py-2 rounded shadow-lg text-lg">
+                                -30%</div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row">
+                            <div class="offer-media-slot w-full sm:w-1/2 flex-shrink-0">
+                                <div class="aspect-[4/3] w-full h-full relative bg-brand-dark">
+                                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop"
+                                        alt="Nike Red Run Professional Running Shoes" loading="eager"
+                                        class="absolute inset-0 w-full h-full object-cover object-center">
+                                </div>
+                            </div>
+                            <div class="p-8 w-full sm:w-1/2 flex flex-col justify-center">
+                                <h3 class="font-heading text-2xl font-bold uppercase mb-2">Nike Red Run</h3>
+                                <p class="text-gray-400 mb-4 text-sm">Professional running shoes with maximum comfort.
+                                </p>
+                                <div
+                                    class="border-2 border-dashed border-white/20 p-2 rounded bg-white/5 text-center mb-4">
+                                    <span class="text-xs text-gray-400 block uppercase">Coupon Code</span>
+                                    <span
+                                        class="text-brand-red font-mono font-bold text-lg tracking-widest">RUN30</span>
+                                </div>
+                                <a href="#"
+                                    class="text-white hover:text-brand-red font-bold uppercase text-sm tracking-wide transition-colors">Shop
+                                    Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offer 2 -->
+                    <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-brand-gray group">
+                        <div class="absolute top-0 right-0 p-4 z-10">
+                            <div
+                                class="bg-brand-red text-white font-heading font-bold px-4 py-2 rounded shadow-lg text-lg">
+                                BOGO</div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row">
+                            <div class="offer-media-slot w-full sm:w-1/2 flex-shrink-0">
+                                <div class="aspect-[4/3] w-full h-full relative bg-brand-dark">
+                                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Gym Bags BOGO Offer" loading="eager"
+                                        class="absolute inset-0 w-full h-full object-cover object-center">
+                                </div>
+                            </div>
+                            <div class="p-8 w-full sm:w-1/2 flex flex-col justify-center">
+                                <h3 class="font-heading text-2xl font-bold uppercase mb-2">Gym Bags</h3>
+                                <p class="text-gray-400 mb-4 text-sm">Buy one get one free on selected gym bags.</p>
+                                <div
+                                    class="border-2 border-dashed border-white/20 p-2 rounded bg-white/5 text-center mb-4">
+                                    <span class="text-xs text-gray-400 block uppercase">Coupon Code</span>
+                                    <span
+                                        class="text-brand-red font-mono font-bold text-lg tracking-widest">BAGFREE</span>
+                                </div>
+                                <a href="#"
+                                    class="text-white hover:text-brand-red font-bold uppercase text-sm tracking-wide transition-colors">Shop
+                                    Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clearance Grid -->
+                <div>
+                    <div class="flex items-end justify-between mb-8">
+                        <h2
+                            class="font-heading text-3xl font-bold uppercase border-l-4 border-brand-red pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4">
+                            Last
+                            <span class="text-brand-red">Chance</span>
+                        </h2>
+                        <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">View All
+                            Clearance</a>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Item 1 -->
+                        <div
+                            class="bg-brand-gray border border-white/5 rounded-xl p-4 group hover:border-brand-red/50 transition-colors">
+                            <div class="offer-media-slot relative mb-3 aspect-square overflow-hidden bg-white/5 rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=2070&auto=format&fit=crop"
+                                    alt="Elite Cleats v1" loading="eager"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 group-hover:scale-105 transition-transform duration-300">
+                                <span
+                                    class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">LOW
+                                    STOCK</span>
+                            </div>
+                            <h4 class="font-bold text-sm mb-1 truncate">Elite Cleats v1</h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-brand-red font-bold">$49.99</span>
+                                <span class="text-xs text-gray-500 line-through">$89.99</span>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div
+                            class="bg-brand-gray border border-white/5 rounded-xl p-4 group hover:border-brand-red/50 transition-colors">
+                            <div class="offer-media-slot relative mb-3 aspect-square overflow-hidden bg-white/5 rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=2000&auto=format&fit=crop"
+                                    alt="Gym Duffel" loading="eager"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <h4 class="font-bold text-sm mb-1 truncate">Gym Duffel</h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-brand-red font-bold">$24.99</span>
+                                <span class="text-xs text-gray-500 line-through">$49.99</span>
+                            </div>
+                        </div>
+                        <!-- Item 3 -->
+                        <div
+                            class="bg-brand-gray border border-white/5 rounded-xl p-4 group hover:border-brand-red/50 transition-colors">
+                            <div class="offer-media-slot relative mb-3 aspect-square overflow-hidden bg-white/5 rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1546483875-ad9014c88eba?q=80&w=2082&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    alt="Street Ball" loading="eager"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 group-hover:scale-105 transition-transform duration-300">
+                                <span
+                                    class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10">LAST
+                                    2</span>
+                            </div>
+                            <h4 class="font-bold text-sm mb-1 truncate">Street Ball</h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-brand-red font-bold">$19.99</span>
+                                <span class="text-xs text-gray-500 line-through">$34.99</span>
+                            </div>
+                        </div>
+                        <!-- Item 4 -->
+                        <div
+                            class="bg-brand-gray border border-white/5 rounded-xl p-4 group hover:border-brand-red/50 transition-colors">
+                            <div class="offer-media-slot relative mb-3 aspect-square overflow-hidden bg-white/5 rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    alt="Tech Tank" loading="eager"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <h4 class="font-bold text-sm mb-1 truncate">Tech Tank</h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-brand-red font-bold">$14.99</span>
+                                <span class="text-xs text-gray-500 line-through">$29.99</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Banner -->
+                <div
+                    class="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:bg-white/10 transition-colors">
+                    <div class="flex items-center gap-6">
+                        <div
+                            class="w-16 h-16 bg-brand-red/20 rounded-full flex items-center justify-center text-3xl text-brand-red group-hover:scale-110 transition-transform">
+                            <ion-icon name="gift-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h3 class="font-heading text-2xl font-bold uppercase">Give $20, Get $20</h3>
+                            <p class="text-gray-400">Refer a friend and you both earn rewards on your next purchase.</p>
+                        </div>
+                    </div>
+                    <button
+                        class="bg-white text-black font-bold uppercase px-6 py-3 rounded-full hover:bg-brand-red hover:text-white transition-colors">Invite
+                        Friends</button>
+                </div>
+
+                <!-- Loyalty Perks -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                    <div class="text-center group cursor-pointer">
+                        <ion-icon name="diamond-outline"
+                            class="text-4xl text-gray-500 mb-2 group-hover:text-brand-red group-hover:scale-110 transition-all"></ion-icon>
+                        <h4 class="font-bold uppercase mb-1">Exclusive Access</h4>
+                        <p class="text-xs text-gray-400">Members shop sales first.</p>
+                    </div>
+                    <div class="text-center group cursor-pointer">
+                        <ion-icon name="calendar-outline"
+                            class="text-4xl text-gray-500 mb-2 group-hover:text-brand-red group-hover:scale-110 transition-all"></ion-icon>
+                        <h4 class="font-bold uppercase mb-1">Birthday Perks</h4>
+                        <p class="text-xs text-gray-400">Special gift on your day.</p>
+                    </div>
+                    <div class="text-center group cursor-pointer">
+                        <ion-icon name="medal-outline"
+                            class="text-4xl text-gray-500 mb-2 group-hover:text-brand-red group-hover:scale-110 transition-all"></ion-icon>
+                        <h4 class="font-bold uppercase mb-1">Points Rewards</h4>
+                        <p class="text-xs text-gray-400">Earn points on every dollar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bundle Deals -->
+            <div>
+                <h2
+                    class="font-heading text-3xl font-bold uppercase mb-8 border-l-4 border-brand-red pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4">
+                    Bundle &
+                    <span class="text-brand-red">Save</span>
+                </h2>
+                <div class="flex overflow-x-auto gap-6 pb-4 snap-x">
+                    <!-- Bundle 1 -->
+                    <div
+                        class="min-w-[300px] md:min-w-[400px] bg-brand-gray border border-white/5 rounded-xl overflow-hidden snap-center group hover:border-brand-red/50 transition-all flex flex-col">
+                        <div class="offer-media-slot relative flex-shrink-0 bg-brand-dark">
+                            <div class="aspect-[16/10] w-full relative">
+                                <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=2000&auto=format&fit=crop"
+                                    alt="Total Runner Kit Bundle" class="w-full h-full object-cover object-center relative z-[1]">
+                            </div>
+                            <div
+                                class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full uppercase text-xs z-10">
+                                Save 20%</div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl uppercase mb-2">Total Runner Kit</h3>
+                            <p class="text-gray-400 text-sm mb-4">Includes: Pro Runners, Compression Socks, Hydration
+                                Belt</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold">$189.99</span>
+                                <button
+                                    class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors"><ion-icon
+                                        name="arrow-forward" class="rtl:rotate-180"></ion-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bundle 2 -->
+                    <div
+                        class="min-w-[300px] md:min-w-[400px] bg-brand-gray border border-white/5 rounded-xl overflow-hidden snap-center group hover:border-brand-red/50 transition-all flex flex-col">
+                        <div class="offer-media-slot relative flex-shrink-0 bg-brand-dark">
+                            <div class="aspect-[16/10] w-full relative">
+                                <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=2071&auto=format&fit=crop"
+                                    alt="Home Gym Starter Bundle" class="w-full h-full object-cover object-center relative z-[1]">
+                            </div>
+                            <div
+                                class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full uppercase text-xs z-10">
+                                Save 25%</div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl uppercase mb-2">Home Gym Starter</h3>
+                            <p class="text-gray-400 text-sm mb-4">Includes: Dumbbell Set, Yoga Mat, Resistance Bands</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold">$149.99</span>
+                                <button
+                                    class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors"><ion-icon
+                                        name="arrow-forward" class="rtl:rotate-180"></ion-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bundle 3 -->
+                    <div
+                        class="min-w-[300px] md:min-w-[400px] bg-brand-gray border border-white/5 rounded-xl overflow-hidden snap-center group hover:border-brand-red/50 transition-all flex flex-col">
+                        <div class="offer-media-slot relative flex-shrink-0 bg-brand-dark">
+                            <div class="aspect-[16/10] w-full relative">
+                                <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=2069&auto=format&fit=crop"
+                                    alt="Recovery Pack Bundle" class="w-full h-full object-cover object-center relative z-[1]">
+                            </div>
+                            <div
+                                class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full uppercase text-xs z-10">
+                                Save 15%</div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl uppercase mb-2">Recovery Pack</h3>
+                            <p class="text-gray-400 text-sm mb-4">Includes: Foam Roller, Massage Ball, Protein Powder
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold">$89.99</span>
+                                <button
+                                    class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors"><ion-icon
+                                        name="arrow-forward" class="rtl:rotate-180"></ion-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student & Military Discount -->
+            <div
+                class="bg-brand-dark border border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-6 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-blue-900/10 group-hover:bg-blue-900/20 transition-colors"></div>
+                <div class="relative z-10">
+                    <h3 class="font-heading text-2xl font-bold uppercase mb-2"><ion-icon name="school-outline"
+                            class="align-bottom mr-2"></ion-icon> Student & Military Discount</h3>
+                    <p class="text-gray-400">Verify your status to unlock an extra <span
+                            class="text-white font-bold">15% OFF</span> every order.</p>
+                </div>
+                <a href="#"
+                    class="relative z-10 bg-white/10 border border-white/20 hover:bg-white hover:text-brand-dark px-6 py-2 rounded-full font-bold uppercase text-sm transition-all">Get
+                    Verified</a>
+            </div>
+
+            <!-- App Promo -->
+            <div
+                class="bg-gradient-to-br from-brand-gray to-black border border-white/5 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
+                <div class="w-full md:w-1/2 relative z-10">
+                    <span class="text-brand-red font-bold uppercase tracking-widest text-sm mb-2 block">Mobile
+                        Exclusive</span>
+                    <h2 class="font-heading text-4xl font-bold uppercase mb-4">Unlock Secret Deals <br> In The App</h2>
+                    <p class="text-gray-400 mb-8">Download the Titan Sports app for early access to drops, app-only
+                        flash sales, and seamless checkout.</p>
+                    <div class="flex gap-4">
+                        <button
+                            class="bg-white text-black px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors">
+                            <ion-icon name="logo-apple" class="text-xl"></ion-icon> App Store
+                        </button>
+                        <button
+                            class="bg-transparent border border-white/30 px-6 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-white/10 transition-colors">
+                            <ion-icon name="logo-google-playstore" class="text-xl"></ion-icon> Google Play
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center relative z-10">
+                    <div
+                        class="w-64 h-96 bg-black border-4 border-gray-800 rounded-[3rem] shadow-2xl flex items-center justify-center relative overflow-hidden">
+                        <!-- Mock Screen -->
+                        <div class="absolute inset-2 bg-brand-dark rounded-[2.5rem] overflow-hidden">
+                            <div class="h-full w-full flex flex-col items-center justify-center text-center p-4">
+                                <ion-icon name="flash" class="text-6xl text-brand-red mb-4 animate-pulse"></ion-icon>
+                                <h3 class="font-heading text-2xl font-bold">App Only <br> 50% OFF</h3>
+                                <button
+                                    class="mt-4 bg-brand-red px-4 py-2 rounded-full text-xs font-bold uppercase">Shop
+                                    Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Drops Calendar -->
+            <div>
+                <h2 class="font-heading text-3xl font-bold uppercase mb-8 text-center">Weekly <span
+                        class="text-brand-red">Drops</span></h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Day 1 -->
+                    <div
+                        class="bg-brand-gray border border-white/5 p-6 rounded-xl text-center group hover:border-brand-red/50 transition-colors">
+                        <span class="text-brand-red font-bold uppercase text-xs mb-2 block">Monday</span>
+                        <h4 class="font-heading text-xl font-bold uppercase">Restock Radar</h4>
+                        <p class="text-xs text-gray-500 mt-2">Popular items back in stock</p>
+                    </div>
+                    <!-- Day 2 -->
+                    <div
+                        class="bg-brand-gray border-2 border-brand-red/20 p-6 rounded-xl text-center group hover:border-brand-red transition-colors shadow-[0_0_15px_rgba(220,38,38,0.1)]">
+                        <span class="text-brand-red font-bold uppercase text-xs mb-2 block">Tuesday</span>
+                        <h4 class="font-heading text-xl font-bold uppercase">Tech Tuesday</h4>
+                        <p class="text-xs text-gray-500 mt-2">Gadgets & Wearables deals</p>
+                    </div>
+                    <!-- Day 3 -->
+                    <div
+                        class="bg-brand-gray border border-white/5 p-6 rounded-xl text-center group hover:border-brand-red/50 transition-colors">
+                        <span class="text-brand-red font-bold uppercase text-xs mb-2 block">Friday</span>
+                        <h4 class="font-heading text-xl font-bold uppercase">Fit Friday</h4>
+                        <p class="text-xs text-gray-500 mt-2">Apparel & Footwear sales</p>
+                    </div>
+                    <!-- Day 4 -->
+                    <div
+                        class="bg-brand-gray border border-white/5 p-6 rounded-xl text-center group hover:border-brand-red/50 transition-colors">
+                        <span class="text-brand-red font-bold uppercase text-xs mb-2 block">Weekend</span>
+                        <h4 class="font-heading text-xl font-bold uppercase">Weekend War</h4>
+                        <p class="text-xs text-gray-500 mt-2">Bundle & Bulk discounts</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner Offers -->
+            <div>
+                <h2 class="font-heading text-3xl font-bold uppercase mb-8 ml-4">Partner <span
+                        class="text-brand-red">Perks</span></h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div
+                        class="bg-white rounded-xl p-6 flex items-center justify-between group hover:scale-[1.02] transition-transform">
+                        <div class="text-black">
+                            <h4 class="font-bold text-xl uppercase mb-1">Gold's Gym</h4>
+                            <p class="text-sm text-gray-600 mb-2">1 Month Free Membership</p>
+                            <span class="bg-black text-white text-xs font-bold px-2 py-1 rounded">With $100
+                                Purchase</span>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center font-bold text-black text-xs text-center p-2 shadow-lg">
+                            GOLD'S GYM</div>
+                    </div>
+                    <div
+                        class="bg-black border border-white/20 rounded-xl p-6 flex items-center justify-between group hover:scale-[1.02] transition-transform">
+                        <div>
+                            <h4 class="font-bold text-xl uppercase mb-1">MyProtein</h4>
+                            <p class="text-sm text-gray-400 mb-2">30% Off Supplements</p>
+                            <span class="bg-brand-red text-white text-xs font-bold px-2 py-1 rounded">Code:
+                                TITAN30</span>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center font-bold text-white text-xs text-center p-2 shadow-lg">
+                            MYPROTEIN</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refurbished Gear -->
+            <div class="bg-brand-gray/50 border border-white/5 rounded-2xl p-8 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="w-full md:w-1/3 text-center md:text-left">
+                        <div
+                            class="inline-flex items-center gap-2 bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-xs font-bold uppercase mb-4 border border-green-500/20">
+                            <ion-icon name="leaf"></ion-icon> Sustainable Choice
+                        </div>
+                        <h2 class="font-heading text-3xl font-bold uppercase mb-4">Titan <span
+                                class="text-green-500">Renewed</span></h2>
+                        <p class="text-gray-400 mb-6">Expertly inspected, refurbished gear at unbeatable prices. Good
+                            for your wallet, good for the planet.</p>
+                        <a href="#"
+                            class="inline-block border border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-6 py-2 rounded-full font-bold uppercase text-sm transition-all">Shop
+                            Renewed</a>
+                    </div>
+                    <div class="w-full md:w-2/3 grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div
+                            class="bg-brand-dark rounded-lg p-3 text-center border border-white/5 hover:border-green-500/50 transition-colors">
+                            <div class="offer-media-slot relative aspect-square overflow-hidden bg-white/5 rounded mb-2">
+                                <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2069&auto=format&fit=crop"
+                                    alt="Adjustable Dumbbells Renewed"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 grayscale hover:grayscale-0 transition-all">
+                            </div>
+                            <p class="text-xs font-bold truncate">Adj. Dumbbells</p>
+                            <span class="text-green-500 text-xs font-bold">$149 <span
+                                    class="text-gray-600 line-through">$299</span></span>
+                        </div>
+                        <div
+                            class="bg-brand-dark rounded-lg p-3 text-center border border-white/5 hover:border-green-500/50 transition-colors">
+                            <div class="offer-media-slot relative aspect-square overflow-hidden bg-white/5 rounded mb-2">
+                                <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=2070&auto=format&fit=crop"
+                                    alt="Rowing Machine Renewed"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 grayscale hover:grayscale-0 transition-all">
+                            </div>
+                            <p class="text-xs font-bold truncate">Rowing Machine</p>
+                            <span class="text-green-500 text-xs font-bold">$399 <span
+                                    class="text-gray-600 line-through">$899</span></span>
+                        </div>
+                        <div
+                            class="bg-brand-dark rounded-lg p-3 text-center border border-white/5 hover:border-green-500/50 transition-colors">
+                            <div class="offer-media-slot relative aspect-square overflow-hidden bg-white/5 rounded mb-2">
+                                <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2000&auto=format&fit=crop"
+                                    alt="Treadmill Renewed"
+                                    class="absolute inset-0 w-full h-full object-contain object-center p-2 grayscale hover:grayscale-0 transition-all">
+                            </div>
+                            <p class="text-xs font-bold truncate">Treadmill</p>
+                            <span class="text-green-500 text-xs font-bold">$599 <span
+                                    class="text-gray-600 line-through">$1200</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Contest -->
+            <div class="relative rounded-3xl overflow-hidden p-8 md:p-12 text-center group">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop"
+                    alt="Social Contest Team Photo"
+                    class="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <div class="relative z-10 max-w-2xl mx-auto">
+                    <ion-icon name="logo-instagram" class="text-5xl text-brand-red mb-4 animate-bounce"></ion-icon>
+                    <h2 class="font-heading text-4xl font-bold uppercase mb-4">Win $100 Gift Card</h2>
+                    <p class="text-xl text-gray-200 mb-8">Post a photo of your new gear with <span
+                            class="font-bold text-brand-red">#TitanOffers</span> for a chance to be featured and win
+                        weekly prizes.</p>
+                    <button
+                        class="bg-white text-black hover:bg-brand-red hover:text-white px-8 py-3 rounded-full font-bold uppercase transition-all shadow-lg transform hover:-translate-y-1">View
+                        Gallery</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <!-- Newsletter Section -->
+    <section class="bg-brand-gray py-12 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-heading text-3xl font-bold uppercase mb-4">Join The <span class="text-brand-red">Team</span>
+            </h2>
+            <p class="text-gray-400 mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for early access to drops,
+                exclusive discounts, and training tips from the pros.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
+                <input type="email" placeholder="Your email address"
+                    class="flex-grow bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red transition-colors">
+                <button
+                    class="bg-brand-red hover:bg-red-700 text-white font-bold px-8 py-3 rounded-md uppercase tracking-wide transition-colors">Sign
+                    Up</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black border-t border-white/10 pt-16 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                <!-- Branding -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
+                        <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
+                                class="text-brand-red">SPORTS</span></span>
+                    </a>
+                    <p class="text-gray-500 text-sm mb-6">
+                        Equipping athletes with world-class gear. Designed for performance, built for champions.
+                    </p>
+                    <!-- Social Icons -->
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-instagram"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-youtube"></ion-icon>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Shop Links -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="shop.html" class="hover:text-brand-red transition-colors">All Products</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">Best Sellers</a></li>
+                        <li><a href="offers.html" class="hover:text-brand-red transition-colors">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="about.html" class="hover:text-brand-red transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
+                        <li><a href="categories.html" class="hover:text-brand-red transition-colors">Categories</a></li>
+                        <li><a href="#" class="hover:text-brand-red transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Newsletter</h4>
+                    <p class="text-gray-500 text-sm mb-4">Subscribe for updates and exclusive offers.</p>
+                    <div class="flex flex-col gap-3">
+                        <input type="email" placeholder="Enter your email"
+                            class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-red transition-colors">
+                        <button
+                            class="bg-brand-red hover:bg-red-700 text-white font-bold py-2 rounded-md uppercase tracking-wide text-sm transition-colors">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-8 border-t border-white/10 text-gray-600 text-xs">
+                &copy; 2024 Titan Sports. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
