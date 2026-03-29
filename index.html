@@ -14,8 +14,12 @@
                     colors: {
                         brand: {
                             red: '#DC2626',
-                            dark: '#0a0a0a',
-                            gray: '#171717'
+                            dark: 'var(--bg-primary)',
+                            gray: 'var(--bg-secondary)',
+                            card: 'var(--bg-card)',
+                            text: 'var(--text-primary)',
+                            muted: 'var(--text-secondary)',
+                            border: 'var(--border-color)'
                         }
                     },
                     fontFamily: {
@@ -26,6 +30,68 @@
             }
         }
     </script>
+    <script>
+        // Immediate theme and direction initialization
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const savedDir = localStorage.getItem('siteDirection') || 'ltr';
+            document.documentElement.setAttribute('dir', savedDir);
+            document.documentElement.classList.add(savedDir);
+        })();
+
+        // Global functions for theme and direction
+        window.setTheme = function(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('siteTheme', theme);
+            document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+            updateToggles();
+        };
+
+        window.setDirection = function(dir) {
+            document.documentElement.setAttribute('dir', dir);
+            document.documentElement.classList.remove('ltr', 'rtl');
+            document.documentElement.classList.add(dir);
+            localStorage.setItem('siteDirection', dir);
+            document.dispatchEvent(new CustomEvent('directionchange', { detail: { direction: dir } }));
+            updateToggles();
+        };
+
+        function updateToggles() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const dir = document.documentElement.getAttribute('dir') || 'ltr';
+            
+            document.querySelectorAll('#theme-toggle, #theme-toggle-mobile').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', theme === 'dark' ? 'moon-outline' : 'sunny-outline');
+            });
+            
+            document.querySelectorAll('#rtl-toggle').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', dir === 'rtl' ? 'language-outline' : 'language-outline');
+            });
+        }
+
+        // Global delegated click listener
+        document.addEventListener('click', function(e) {
+            const themeBtn = e.target.closest('#theme-toggle, #theme-toggle-mobile');
+            if (themeBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('data-theme');
+                window.setTheme(current === 'dark' ? 'light' : 'dark');
+            }
+            
+            const rtlBtn = e.target.closest('#rtl-toggle');
+            if (rtlBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('dir') || 'ltr';
+                window.setDirection(current === 'ltr' ? 'rtl' : 'ltr');
+            }
+        });
+
+        // Sync toggles on load
+        window.addEventListener('DOMContentLoaded', updateToggles);
+    </script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap"
         rel="stylesheet">
@@ -33,14 +99,15 @@
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 
 <body
-    class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden">
+    class="bg-brand-dark text-brand-text font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-brand-dark border-b border-white/10 transition-all duration-300">
-        <div class="w-full px-4 sm:px-6 lg:px-8">
+    <nav class="fixed w-full z-50 bg-brand-dark transition-all duration-300 border-b border-brand-border">
+        <div class="w-full px-4 sm:px-6 lg:px-4 xl:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 <!-- Logo -->
                 <div class="flex-shrink-0">
@@ -52,75 +119,82 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse">
+                <div class="hidden lg:flex items-center lg:space-x-2 xl:space-x-8 rtl:space-x-reverse">
                     <!-- Home Dropdown -->
                     <div class="relative group">
                         <button data-dropdown-toggle="home-dropdown"
-                            class="flex items-center gap-1 text-brand-red hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
+                            class="flex items-center gap-1 text-brand-red hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-bold">
                             Home <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
                         </button>
                         <div id="home-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-brand-border rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
                             <a href="index.html"
                                 class="block px-4 py-2 text-sm text-white bg-brand-red transition-colors">Home 1</a>
                             <a href="home2.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Home
                                 2</a>
                         </div>
                     </div>
 
+                    <a href="about.html"
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">About</a>
+
                     <a href="shop.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Shop</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Shop</a>
                     <a href="categories.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Categories</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Categories</a>
                     <a href="offers.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Offers</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Offers</a>
+
+                    <a href="contact.html"
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">Contact</a>
 
                     <!-- Dashboard Dropdown -->
                     <div class="relative group">
                         <button data-dropdown-toggle="dashboard-dropdown"
-                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">
+                            class="flex items-center gap-1 text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">
                             Dashboard <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
                         </button>
                         <div id="dashboard-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-brand-border rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
                             <a href="user-dashboard.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">User
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">User
                                 Dashboard</a>
                             <a href="admin-dashboard.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Admin
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Admin
                                 Dashboard</a>
                         </div>
                     </div>
-
-                    <a href="about.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">About</a>
-                    <a href="contact.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Contact</a>
                 </div>
 
                 <!-- Icons & Mobile Button -->
-                <div class="flex items-center gap-2 sm:gap-4">
+                <div class="flex items-center gap-2 sm:gap-4 lg:gap-2 xl:gap-4">
                     <!-- RTL Toggle -->
-                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-gray-300 hover:text-brand-red transition-colors"
+                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-brand-muted hover:text-brand-red transition-colors"
                         title="Toggle Language Direction">
-                        <ion-icon name="globe-outline" class="text-xl sm:text-2xl"></ion-icon>
+                        <ion-icon name="language-outline" class="text-xl sm:text-2xl"></ion-icon>
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-1.5 sm:p-2 text-brand-muted hover:text-brand-red transition-colors"
+                        title="Toggle Color Theme">
+                        <ion-icon name="moon-outline" class="text-xl sm:text-2xl"></ion-icon>
                     </button>
 
                     <a href="login.html"
-                        class="hidden md:block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors">
+                        class="hidden lg:block text-brand-muted hover:text-brand-text font-bold text-sm uppercase tracking-wide transition-colors">
                         Login
                     </a>
 
                     <a href="signup.html"
-                        class="hidden md:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
+                        class="hidden lg:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 lg:px-5 py-2 lg:py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
                         Join
                     </a>
 
                     <!-- Mobile menu button -->
                     <div class="flex lg:hidden">
                         <button id="mobile-menu-btn"
-                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-brand-muted hover:text-brand-text hover:bg-white/10 focus:outline-none">
                             <ion-icon name="menu-outline" class="text-2xl sm:text-3xl"></ion-icon>
                         </button>
                     </div>
@@ -129,61 +203,63 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-white/10">
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-brand-border">
             <div class="px-4 sm:px-6 lg:px-8 pt-2 pb-3 space-y-1 text-center">
                 <!-- Mobile Home Dropdown -->
                 <div class="space-y-1">
                     <button data-dropdown-toggle="mobile-home-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-brand-red hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase transition-colors">
+                        class="w-full flex items-center justify-center gap-2 text-brand-red hover:text-brand-text px-3 py-2 rounded-md text-base font-bold uppercase transition-colors">
                         Home <ion-icon name="chevron-down-outline"></ion-icon>
                     </button>
                     <div id="mobile-home-dropdown" data-dropdown-menu
-                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
-                        <a href="index.html" class="block px-3 py-2 rounded-md text-sm text-white bg-white/10">Home
+                        class="hidden bg-brand-muted/10 rounded-md py-2 space-y-1 mx-4">
+                        <a href="index.html"
+                            class="block px-3 py-2 rounded-md text-sm text-white bg-brand-red">Home
                             1</a>
                         <a href="home2.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Home
                             2</a>
                     </div>
                 </div>
 
+                <a href="about.html"
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">About</a>
+
                 <a href="shop.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Shop</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">Shop</a>
                 <a href="categories.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Categories</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">Categories</a>
                 <a href="offers.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Offers</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">Offers</a>
+
+                <a href="contact.html"
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">Contact</a>
 
                 <!-- Mobile Dashboard Dropdown -->
                 <div class="space-y-1">
                     <button data-dropdown-toggle="mobile-dashboard-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase">
+                        class="w-full flex items-center justify-center gap-2 text-brand-muted hover:text-brand-text px-3 py-2 rounded-md text-base font-medium uppercase transition-colors">
                         Dashboard <ion-icon name="chevron-down-outline"></ion-icon>
                     </button>
                     <div id="mobile-dashboard-dropdown" data-dropdown-menu
-                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
+                        class="hidden bg-brand-muted/10 rounded-md py-2 space-y-1 mx-4">
                         <a href="user-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">User
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:text-white transition-colors">User
                             Dashboard</a>
                         <a href="admin-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Admin
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:text-white transition-colors">Admin
                             Dashboard</a>
                     </div>
                 </div>
-
-                <a href="about.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">About</a>
-                <a href="contact.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Contact</a>
                 
                 <!-- Mobile Auth Links -->
-                <div class="pt-4 border-t border-white/10 mt-4 flex flex-col gap-2 px-4">
+                <div class="pt-4 border-t border-brand-border mt-4 flex flex-col gap-2 px-4 lg:hidden">
                     <a href="login.html"
-                        class="block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors py-2">
+                        class="block text-brand-muted hover:text-brand-text font-bold text-sm uppercase tracking-wide transition-colors py-2">
                         Login
                     </a>
                     <a href="signup.html"
-                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all text-center">
+                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 lg:px-3 xl:px-4 py-2 lg:py-1.5 xl:py-2 rounded-full transition-all text-center">
                         Join Now
                     </a>
                 </div>
@@ -205,11 +281,11 @@
 
         <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
             <h1
-                class="font-heading text-6xl md:text-8xl font-bold uppercase tracking-tighter mb-6 leading-tight animate-fade-in-up">
+                class="font-heading text-6xl md:text-8xl font-bold uppercase tracking-tighter mb-6 leading-tight animate-fade-in-up text-white">
                 Dominate <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-400">The
                     Game</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
+            <p class="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto font-light">
                 Premium gear for champions. Elevate your performance with top-tier equipment designed for speed,
                 strength, and endurance.
             </p>
@@ -219,7 +295,7 @@
                     Shop Now
                 </a>
                 <a href="categories.html"
-                    class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-full font-bold uppercase tracking-wider transition-all backdrop-blur-sm">
+                    class="bg-white/10 hover:bg-white/20 text-white border border-brand-border px-8 py-4 rounded-full font-bold uppercase tracking-wider transition-all backdrop-blur-sm">
                     Explore Categories
                 </a>
             </div>
@@ -235,13 +311,13 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Category 1 -->
-                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-white/10">
+                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-brand-border">
                     <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000&auto=format&fit=crop"
                         alt="Football"
                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 w-full">
-                        <h3 class="font-heading text-3xl font-bold uppercase mb-2">Football</h3>
+                        <h3 class="font-heading text-3xl font-bold uppercase mb-2 text-white">Football</h3>
                         <a href="shop.html#football"
                             class="inline-flex items-center text-brand-red font-bold hover:text-white transition-colors">
                             View Gear <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
@@ -250,13 +326,13 @@
                 </div>
 
                 <!-- Category 2 -->
-                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-white/10">
+                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-brand-border">
                     <img src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2069&auto=format&fit=crop"
                         alt="Basketball"
                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 w-full">
-                        <h3 class="font-heading text-3xl font-bold uppercase mb-2">Basketball</h3>
+                        <h3 class="font-heading text-3xl font-bold uppercase mb-2 text-white">Basketball</h3>
                         <a href="shop.html#basketball"
                             class="inline-flex items-center text-brand-red font-bold hover:text-white transition-colors">
                             View Gear <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
@@ -265,13 +341,13 @@
                 </div>
 
                 <!-- Category 3 -->
-                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-white/10">
+                <div class="group relative h-96 rounded-2xl overflow-hidden cursor-pointer border border-brand-border">
                     <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
                         alt="Training"
                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 w-full">
-                        <h3 class="font-heading text-3xl font-bold uppercase mb-2">Training</h3>
+                        <h3 class="font-heading text-3xl font-bold uppercase mb-2 text-white">Training</h3>
                         <a href="shop.html#training"
                             class="inline-flex items-center text-brand-red font-bold hover:text-white transition-colors">
                             View Gear <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
@@ -290,7 +366,7 @@
                     Trending <span class="text-brand-red">Now</span>
                 </h2>
                 <a href="shop.html"
-                    class="hidden md:flex items-center text-gray-400 hover:text-white transition-colors">
+                    class="hidden md:flex items-center text-brand-muted hover:text-brand-text transition-colors">
                     See All Products <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
                 </a>
             </div>
@@ -298,93 +374,119 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Product 1 -->
                 <div
-                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-white/5 transition-all duration-300">
-                    <div class="relative h-64 bg-white/5 p-4 flex items-center justify-center">
+                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-brand-border transition-all duration-300 flex flex-col">
+                    <div class="relative h-64 bg-white/5 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=2070&auto=format&fit=crop"
                             alt="Pro Cleats"
-                            class="object-contain max-h-full group-hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         <span class="absolute top-4 right-4 bg-brand-red text-xs font-bold px-2 py-1 rounded">HOT</span>
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 flex-grow flex flex-col">
                         <p class="text-xs text-brand-red font-bold uppercase mb-1">Football</p>
                         <h3 class="font-heading text-xl font-bold mb-2">Elite Striker Cleats</h3>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-medium">$129.99</span>
-                            <button
-                                class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors text-white">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </button>
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-lg font-medium">$129.99</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="flex-grow bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md uppercase text-xs transition-colors">
+                                    Buy Now
+                                </button>
+                                <button class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/10 hover:bg-brand-red rounded-full transition-colors text-white" title="Add to Cart">
+                                    <ion-icon name="cart-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
                 <div
-                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-white/5 transition-all duration-300">
-                    <div class="relative h-64 bg-white/5 p-4 flex items-center justify-center">
+                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-brand-border transition-all duration-300 flex flex-col">
+                    <div class="relative h-64 bg-white/5 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=2071&auto=format&fit=crop"
                             alt="Basketball"
-                            class="object-contain max-h-full group-hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 flex-grow flex flex-col">
                         <p class="text-xs text-brand-red font-bold uppercase mb-1">Basketball</p>
                         <h3 class="font-heading text-xl font-bold mb-2">Pro Grip Basketball</h3>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-medium">$49.99</span>
-                            <button
-                                class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors text-white">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </button>
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-lg font-medium">$49.99</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="flex-grow bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md uppercase text-xs transition-colors">
+                                    Buy Now
+                                </button>
+                                <button class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/10 hover:bg-brand-red rounded-full transition-colors text-white" title="Add to Cart">
+                                    <ion-icon name="cart-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
                 <div
-                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-white/5 transition-all duration-300">
-                    <div class="relative h-64 bg-white/5 p-4 flex items-center justify-center">
+                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-brand-border transition-all duration-300 flex flex-col">
+                    <div class="relative h-64 bg-white/5 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=2071&auto=format&fit=crop"
                             alt="Dumbbells"
-                            class="object-contain max-h-full group-hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 flex-grow flex flex-col">
                         <p class="text-xs text-brand-red font-bold uppercase mb-1">Training</p>
                         <h3 class="font-heading text-xl font-bold mb-2">Hex Dumbbell Set</h3>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-medium">$89.99</span>
-                            <button
-                                class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors text-white">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </button>
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-lg font-medium">$89.99</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="flex-grow bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md uppercase text-xs transition-colors">
+                                    Buy Now
+                                </button>
+                                <button class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/10 hover:bg-brand-red rounded-full transition-colors text-white" title="Add to Cart">
+                                    <ion-icon name="cart-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Product 4 -->
                 <div
-                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-white/5 transition-all duration-300">
-                    <div class="relative h-64 bg-white/5 p-4 flex items-center justify-center">
+                    class="bg-brand-dark rounded-xl overflow-hidden group hover:border-brand-red border border-brand-border transition-all duration-300 flex flex-col">
+                    <div class="relative h-64 bg-white/5 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1562183241-b937e95585b6?q=80&w=1965&auto=format&fit=crop"
                             alt="Running Shoes"
-                            class="object-contain max-h-full group-hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         <span class="absolute top-4 right-4 bg-gray-600 text-xs font-bold px-2 py-1 rounded">New</span>
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 flex-grow flex flex-col">
                         <p class="text-xs text-brand-red font-bold uppercase mb-1">Running</p>
                         <h3 class="font-heading text-xl font-bold mb-2">AeroSpeed Runners</h3>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-medium">$149.99</span>
-                            <button
-                                class="bg-white/10 hover:bg-brand-red p-2 rounded-full transition-colors text-white">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </button>
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-lg font-medium">$149.99</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="flex-grow bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md uppercase text-xs transition-colors">
+                                    Buy Now
+                                </button>
+                                <button class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/10 hover:bg-brand-red rounded-full transition-colors text-white" title="Add to Cart">
+                                    <ion-icon name="cart-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="mt-8 text-center md:hidden">
-                <a href="shop.html" class="inline-flex items-center text-gray-400 hover:text-white transition-colors">
+                <a href="shop.html" class="inline-flex items-center text-brand-muted hover:text-white transition-colors">
                     See All Products <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
                 </a>
             </div>
@@ -392,35 +494,35 @@
     </section>
 
     <!-- Key Features -->
-    <section class="py-20 bg-brand-dark border-t border-white/5">
+    <section class="py-20 bg-brand-dark border-t border-brand-border">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-white">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-brand-text">
                 <div
-                    class="p-6 border border-white/10 rounded-xl hover:border-brand-red transition-colors duration-300">
+                    class="p-6 border border-brand-border rounded-xl hover:border-brand-red transition-colors duration-300">
                     <div
                         class="w-16 h-16 mx-auto bg-brand-red/20 rounded-full flex items-center justify-center mb-4 text-brand-red text-3xl">
                         <ion-icon name="trophy-outline"></ion-icon>
                     </div>
-                    <h3 class="text-xl font-heading font-bold mb-2 uppercase">Premium Quality</h3>
-                    <p class="text-gray-400 text-sm">Engineered for elite performance with durability that lasts.</p>
+                    <h3 class="text-xl font-heading font-bold mb-2 uppercase text-brand-text">Premium Quality</h3>
+                    <p class="text-brand-muted text-sm">Engineered for elite performance with durability that lasts.</p>
                 </div>
                 <div
-                    class="p-6 border border-white/10 rounded-xl hover:border-brand-red transition-colors duration-300">
+                    class="p-6 border border-brand-border rounded-xl hover:border-brand-red transition-colors duration-300">
                     <div
                         class="w-16 h-16 mx-auto bg-brand-red/20 rounded-full flex items-center justify-center mb-4 text-brand-red text-3xl">
                         <ion-icon name="rocket-outline"></ion-icon>
                     </div>
-                    <h3 class="text-xl font-heading font-bold mb-2 uppercase">Fast Shipping</h3>
-                    <p class="text-gray-400 text-sm">Get your gear fast with our expedited worldwide shipping.</p>
+                    <h3 class="text-xl font-heading font-bold mb-2 uppercase text-brand-text">Fast Shipping</h3>
+                    <p class="text-brand-muted text-sm">Get your gear fast with our expedited worldwide shipping.</p>
                 </div>
                 <div
-                    class="p-6 border border-white/10 rounded-xl hover:border-brand-red transition-colors duration-300">
+                    class="p-6 border border-brand-border rounded-xl hover:border-brand-red transition-colors duration-300">
                     <div
                         class="w-16 h-16 mx-auto bg-brand-red/20 rounded-full flex items-center justify-center mb-4 text-brand-red text-3xl">
                         <ion-icon name="headset-outline"></ion-icon>
                     </div>
                     <h3 class="text-xl font-heading font-bold mb-2 uppercase">24/7 Support</h3>
-                    <p class="text-gray-400 text-sm">Our expert team is here to help you anytime, day or night.</p>
+                    <p class="text-brand-muted text-sm">Our expert team is here to help you anytime, day or night.</p>
                 </div>
             </div>
         </div>
@@ -455,13 +557,13 @@
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-brand-dark p-8 rounded-2xl border border-white/5 relative">
+                <div class="bg-brand-dark p-8 rounded-2xl border border-brand-border relative">
                     <ion-icon name="quote" class="absolute top-4 right-4 text-4xl text-white/5"></ion-icon>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop"
                             alt="User" class="w-12 h-12 rounded-full border-2 border-brand-red">
                         <div>
-                            <h4 class="font-bold text-white">James C.</h4>
+                            <h4 class="font-bold text-brand-text">James C.</h4>
                             <div class="flex text-brand-red text-sm">
                                 <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon
                                     name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon
@@ -469,11 +571,11 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-400 italic">"The quality of the Titan Pro Runner shoes is unmatched. I've shaved
+                    <p class="text-brand-muted italic">"The quality of the Titan Pro Runner shoes is unmatched. I've shaved
                         seconds off my 5K time. Highly recommended!"</p>
                 </div>
                 <!-- Testimonial 2 -->
-                <div class="bg-brand-dark p-8 rounded-2xl border border-white/5 relative">
+                <div class="bg-brand-dark p-8 rounded-2xl border border-brand-border relative">
                     <ion-icon name="quote" class="absolute top-4 right-4 text-4xl text-white/5"></ion-icon>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
@@ -487,11 +589,11 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-400 italic">"Fast shipping and amazing customer support. The Hex Dumbbells are
+                    <p class="text-brand-muted italic">"Fast shipping and amazing customer support. The Hex Dumbbells are
                         solid and feel great in hand."</p>
                 </div>
                 <!-- Testimonial 3 -->
-                <div class="bg-brand-dark p-8 rounded-2xl border border-white/5 relative">
+                <div class="bg-brand-dark p-8 rounded-2xl border border-brand-border relative">
                     <ion-icon name="quote" class="absolute top-4 right-4 text-4xl text-white/5"></ion-icon>
                     <div class="flex items-center gap-4 mb-6">
                         <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop"
@@ -505,7 +607,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-400 italic">"Finally found a brand that understands what serious lifters need.
+                    <p class="text-brand-muted italic">"Finally found a brand that understands what serious lifters need.
                         Titan Sports is my go-to for everything."</p>
                 </div>
             </div>
@@ -519,7 +621,7 @@
                 <h2 class="font-heading text-4xl font-bold uppercase">
                     The <span class="text-brand-red">Locker Room</span>
                 </h2>
-                <a href="#" class="hidden md:flex items-center text-gray-400 hover:text-white transition-colors">
+                <a href="#" class="hidden md:flex items-center text-brand-muted transition-colors">
                     Read More Articles <ion-icon name="arrow-forward" class="ml-2 rtl:rotate-180"></ion-icon>
                 </a>
             </div>
@@ -535,7 +637,7 @@
                             class="absolute top-4 left-4 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full">
                             TRAINING</div>
                     </div>
-                    <p class="text-gray-500 text-sm mb-2">Oct 24, 2024 • 5 min read</p>
+                    <p class="text-brand-muted text-sm mb-2">Oct 24, 2024 • 5 min read</p>
                     <h3
                         class="font-heading text-xl font-bold uppercase mb-2 group-hover:text-brand-red transition-colors">
                         5 Exercises to Explode Your Vertical Jump</h3>
@@ -550,7 +652,7 @@
                             class="absolute top-4 left-4 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full">
                             NUTRITION</div>
                     </div>
-                    <p class="text-gray-500 text-sm mb-2">Oct 18, 2024 • 4 min read</p>
+                    <p class="text-brand-muted text-sm mb-2">Oct 18, 2024 • 4 min read</p>
                     <h3
                         class="font-heading text-xl font-bold uppercase mb-2 group-hover:text-brand-red transition-colors">
                         Fueling for Performance: Pre-Workout Guide</h3>
@@ -565,7 +667,7 @@
                             class="absolute top-4 left-4 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full">
                             GEAR</div>
                     </div>
-                    <p class="text-gray-500 text-sm mb-2">Oct 12, 2024 • 3 min read</p>
+                    <p class="text-brand-muted text-sm mb-2">Oct 12, 2024 • 3 min read</p>
                     <h3
                         class="font-heading text-xl font-bold uppercase mb-2 group-hover:text-brand-red transition-colors">
                         Choosing the Right Running Shoe for Your Foot Type</h3>
@@ -581,53 +683,53 @@
                 class="brand-strip grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 items-center justify-items-center opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
                 <!-- Using text as placeholders for logos, normally would be SVGs -->
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     NIKE</h3>
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     ADIDAS</h3>
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     UNDER ARMOUR</h3>
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     PUMA</h3>
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     REEBOK</h3>
                 <h3
-                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
+                    class="font-heading text-lg sm:text-xl lg:text-2xl font-bold text-brand-text tracking-widest hover:text-brand-red cursor-pointer text-center whitespace-nowrap">
                     GYMSHARK</h3>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-black border-t border-white/10 pt-16 pb-8 mt-auto">
+    <footer class="bg-brand-gray border-t border-brand-border pt-16 pb-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
                 <!-- Branding -->
                 <div class="sm:col-span-2 lg:col-span-1">
                     <a href="index.html" class="flex items-center gap-2 mb-4">
                         <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
-                        <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
+                        <span class="font-heading text-2xl font-bold tracking-wider text-brand-text">TITAN<span
                                 class="text-brand-red">SPORTS</span></span>
                     </a>
-                    <p class="text-gray-500 text-sm mb-6">
+                    <p class="text-brand-muted text-sm mb-6">
                         Equipping athletes with world-class gear. Designed for performance, built for champions.
                     </p>
                     <!-- Social Icons -->
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-instagram"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-twitter"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-youtube"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-facebook"></ion-icon>
                         </a>
                     </div>
@@ -635,8 +737,8 @@
 
                 <!-- Shop Links -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Shop</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Shop</h4>
+                    <ul class="space-y-2 text-brand-muted text-sm">
                         <li><a href="shop.html" class="hover:text-brand-red transition-colors">All Products</a></li>
                         <li><a href="#" class="hover:text-brand-red transition-colors">New Arrivals</a></li>
                         <li><a href="#" class="hover:text-brand-red transition-colors">Best Sellers</a></li>
@@ -646,8 +748,8 @@
 
                 <!-- Company Links -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Company</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Company</h4>
+                    <ul class="space-y-2 text-brand-muted text-sm">
                         <li><a href="about.html" class="hover:text-brand-red transition-colors">About Us</a></li>
                         <li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
                         <li><a href="categories.html" class="hover:text-brand-red transition-colors">Categories</a></li>
@@ -655,20 +757,19 @@
                     </ul>
                 </div>
 
-                <!-- Newsletter -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Newsletter</h4>
-                    <p class="text-gray-500 text-sm mb-4">Subscribe for updates and exclusive offers.</p>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Newsletter</h4>
+                    <p class="text-brand-muted text-sm mb-4">Subscribe for updates and exclusive offers.</p>
                     <div class="flex flex-col gap-3">
                         <input type="email" placeholder="Enter your email"
-                            class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-red transition-colors">
+                            class="bg-brand-muted/10 border border-brand-border rounded-md px-4 py-2 text-brand-text text-sm focus:outline-none focus:border-brand-red transition-colors">
                         <button
                             class="bg-brand-red hover:bg-red-700 text-white font-bold py-2 rounded-md uppercase tracking-wide text-sm transition-colors">Subscribe</button>
                     </div>
                 </div>
             </div>
 
-            <div class="text-center pt-8 border-t border-white/10 text-gray-600 text-xs">
+            <div class="text-center pt-8 border-t border-brand-border text-brand-muted text-xs">
                 &copy; 2024 Titan Sports. All rights reserved.
             </div>
         </div>

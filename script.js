@@ -1,45 +1,6 @@
-// RTL Toggle Logic with Enhanced Support
-const htmlDoc = document.documentElement;
-const rtlToggleBtn = document.getElementById('rtl-toggle');
-
-function setDirection(dir) {
-    // Set direction attribute
-    htmlDoc.setAttribute('dir', dir);
-    localStorage.setItem('siteDirection', dir);
-    
-    // Add/remove RTL class for additional styling hooks
-    if (dir === 'rtl') {
-        htmlDoc.classList.add('rtl');
-        htmlDoc.classList.remove('ltr');
-    } else {
-        htmlDoc.classList.remove('rtl');
-        htmlDoc.classList.add('ltr');
-    }
-    
-    // Update RTL toggle icon state (optional visual feedback)
-    const rtlIcon = rtlToggleBtn?.querySelector('ion-icon');
-    if (rtlIcon) {
-        rtlIcon.setAttribute('name', dir === 'rtl' ? 'language-outline' : 'globe-outline');
-    }
-    
-    // Dispatch custom event for components that need to react to direction change
-    document.dispatchEvent(new CustomEvent('directionchange', { 
-        detail: { direction: dir, isRTL: dir === 'rtl' } 
-    }));
-}
-
-// Initialize Direction on page load
-const savedDir = localStorage.getItem('siteDirection') || 'ltr';
-setDirection(savedDir);
-
-if (rtlToggleBtn) {
-    rtlToggleBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const currentDir = htmlDoc.getAttribute('dir');
-        const newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
-        setDirection(newDir);
-    });
-}
+// Note: Theme and RTL Toggle logic has been moved to a consolidated head script 
+// in each HTML file for better reliability and faster initial interaction.
+// Head script handles: setTheme, setDirection, and delegated click listeners.
 
 // Mobile Menu Logic
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -125,17 +86,17 @@ if (pricingToggle) {
         if (isYearly) {
             toggleSlider.classList.remove('left-1');
             toggleSlider.classList.add('right-1');
-            monthlyLabel.classList.remove('text-white', 'font-bold');
-            monthlyLabel.classList.add('text-gray-400');
-            yearlyLabel.classList.remove('text-gray-400');
-            yearlyLabel.classList.add('text-white', 'font-bold');
+            monthlyLabel.classList.remove('text-brand-text', 'font-bold');
+            monthlyLabel.classList.add('text-brand-muted');
+            yearlyLabel.classList.remove('text-brand-muted');
+            yearlyLabel.classList.add('text-brand-text', 'font-bold');
         } else {
             toggleSlider.classList.remove('right-1');
             toggleSlider.classList.add('left-1');
-            monthlyLabel.classList.remove('text-gray-400');
-            monthlyLabel.classList.add('text-white', 'font-bold');
-            yearlyLabel.classList.remove('text-white', 'font-bold');
-            yearlyLabel.classList.add('text-gray-400');
+            monthlyLabel.classList.remove('text-brand-muted');
+            monthlyLabel.classList.add('text-brand-text', 'font-bold');
+            yearlyLabel.classList.remove('text-brand-text', 'font-bold');
+            yearlyLabel.classList.add('text-brand-muted');
         }
 
         // Update prices

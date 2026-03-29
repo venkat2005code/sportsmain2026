@@ -1,8 +1,53 @@
+/* Theme Variables */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #171717;
+    --bg-card: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --nav-bg: rgba(10, 10, 10, 0.95);
+    --footer-bg: #000000;
+}
+
+[data-theme="light"] {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-card: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --nav-bg: rgba(248, 250, 252, 0.95);
+    --footer-bg: #f1f5f9;
+}
+
+.theme-border {
+    border-color: var(--border-color);
+}
+
 /* Custom Scrollbar */
 
 body {
     max-width: 100vw;
     overflow-x: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Universal theme transition */
+*, *::before, *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Exceptions to universal transition (e.g. icons, images, elements with their own complex transitions) */
+.transition-all, .transition-colors, .transition-transform, 
+ion-icon, img, .animate-fade-in-up, .reveal {
+    transition: inherit !important;
 }
 
 /* ========================================
@@ -63,9 +108,9 @@ body {
 /* Mobile Menu Panel */
 .navbar-mobile-menu {
     display: none;
-    background: rgba(10, 10, 10, 0.95);
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     text-align: center;
 }
 
@@ -202,66 +247,135 @@ body {
 }
 
 /* ========================================
-   BREAKPOINT: 1024px EXACTLY (Tablet Landscape/Nest Hub)
-   Fixes navbar compression and visual balance
+   BREAKPOINT: 1024px–1279px (Tablet Landscape / Nest Hub)
+   Main nav: logo + menu + icons on one row
+   Dashboard nav: logo left, icons right only
    ======================================== */
 @media (min-width: 1024px) and (max-width: 1279px) {
-    /* Increase navbar height for better visual balance */
+
+    /* Stable height for all fixed navs */
     nav.fixed {
-        min-height: 5.5rem;
+        min-height: 4.5rem;
     }
-    
-    /* Navbar inner container - increased height and vertical centering */
+
+    /* Wrapper padding */
     nav.fixed > div {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-    
+
+    /* Inner flex row */
     nav.fixed > div > div {
-        min-height: 5.5rem;
-        height: 5.5rem;
+        height: 4.5rem;
+        min-height: 4.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+    }
+
+    /* ── Logo (applies to all navs) ── */
+    nav.fixed > div > div > div:first-child {
+        flex-shrink: 0;
         display: flex;
         align-items: center;
     }
-    
-    /* Logo vertical centering */
-    nav.fixed .flex-shrink-0 {
+
+    nav.fixed > div > div > div:first-child a {
         display: flex;
         align-items: center;
+        gap: 0.375rem;
     }
-    
-    nav.fixed .flex-shrink-0 a {
+
+    nav.fixed > div > div > div:first-child .font-heading {
+        font-size: 1.125rem;
+        letter-spacing: 0.04em;
+    }
+
+    nav.fixed > div > div > div:first-child ion-icon {
+        font-size: 1.5rem !important;
+    }
+
+    /* ── Desktop nav menu (MAIN NAV ONLY — not dashboard) ── */
+    nav.fixed:not(.dashboard-nav) > div > div > div:nth-child(2) {
+        display: flex !important;
+        align-items: center;
+        gap: 0;
+        --tw-space-x-reverse: 0;
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    /* Remove Tailwind space-x margin on menu items */
+    nav.fixed:not(.dashboard-nav) > div > div > div:nth-child(2) > * + * {
+        margin-left: 0 !important;
+    }
+
+    /* Nav links and dropdown buttons */
+    nav.fixed:not(.dashboard-nav) > div > div > div:nth-child(2) > a,
+    nav.fixed:not(.dashboard-nav) > div > div > div:nth-child(2) > div > button {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    /* ── Icons + Login + Join (MAIN NAV ONLY) ── */
+    nav.fixed:not(.dashboard-nav) > div > div > div:last-child {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        flex-shrink: 0;
     }
-    
-    /* Desktop menu - better spacing at 1024px */
-    nav.fixed [class*="hidden"][class*="lg:flex"] {
-        gap: 1rem;
-        align-items: center;
+
+    nav.fixed:not(.dashboard-nav) > div > div > div:last-child ion-icon {
+        font-size: 1.25rem !important;
     }
-    
-    nav.fixed [class*="hidden"][class*="lg:flex"] > a,
-    nav.fixed [class*="hidden"][class*="lg:flex"] > div > button {
-        padding: 0.625rem 0.75rem;
-        font-size: 0.8125rem;
+
+    nav.fixed:not(.dashboard-nav) > div > div > div:last-child > button {
+        padding: 0.25rem 0.375rem;
+    }
+
+    nav.fixed:not(.dashboard-nav) > div > div > div:last-child > a.hidden.lg\:block:first-of-type {
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
         white-space: nowrap;
     }
-    
-    /* Logo sizing - slightly smaller for 1024px */
-    nav.fixed .font-heading {
-        font-size: 1.375rem;
+
+    nav.fixed:not(.dashboard-nav) > div > div > div:last-child > a.hidden.lg\:block:last-of-type {
+        font-size: 0.72rem;
+        padding: 0.375rem 0.75rem;
+        white-space: nowrap;
     }
-    
-    nav.fixed .flex-shrink-0 ion-icon {
-        font-size: 1.75rem !important;
+
+    /* ── DASHBOARD NAV: Logo left, Icons right ── */
+    nav.fixed.dashboard-nav > div > div {
+        justify-content: space-between;
     }
-    
-    /* Icons container alignment */
-    nav.fixed [class*="flex"][class*="items-center"][class*="gap-2"],
-    nav.fixed [class*="flex"][class*="items-center"][class*="gap-4"] {
+
+    nav.fixed.dashboard-nav > div > div > div:last-child {
+        display: flex;
         align-items: center;
+        gap: 0.75rem;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    nav.fixed.dashboard-nav > div > div > div:last-child ion-icon {
+        font-size: 1.375rem !important;
+    }
+
+    nav.fixed.dashboard-nav > div > div > div:last-child button {
+        padding: 0.375rem 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
@@ -350,8 +464,8 @@ body {
     top: 100%;
     left: 0;
     min-width: 12rem;
-    background: rgba(10, 10, 10, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--nav-bg);
+    border: 1px solid var(--border-color);
     border-radius: 0.375rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     padding: 0.5rem 0;
@@ -430,27 +544,31 @@ body {
    ======================================== */
 
 /* Ensure navigation visibility is ONLY controlled by breakpoints */
-/* Desktop: ≥1024px - show desktop menu, hide mobile */
+/* Desktop: ≥1280px - show desktop menu, hide mobile */
 @media (min-width: 1024px) {
     /* These rules apply regardless of direction */
-    .hidden.lg\\:flex {
+    nav .hidden.lg\:flex {
         display: flex !important;
     }
     
-    .lg\\:hidden {
+    nav .hidden.lg\:block {
+        display: block !important;
+    }
+    
+    nav .lg\:hidden {
         display: none !important;
     }
 }
 
 /* Mobile/Tablet: <1024px - hide desktop menu, show mobile controls */
 @media (max-width: 1023px) {
-    /* Show mobile menu button */
-    .flex.lg\\:hidden {
+    /* Show mobile menu button securely without affecting internal dropdown wrappers */
+    nav .flex.lg\:hidden:not(#mobile-menu *) {
         display: flex !important;
     }
     
     /* Hide desktop menu */
-    .hidden.lg\\:flex {
+    nav .hidden.lg\:flex {
         display: none !important;
     }
 }
@@ -773,7 +891,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #0f0f0f;
+    background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -789,9 +907,9 @@ body {
 
 /* Glassmorphism Utilities */
 .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-bg);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
 }
 
 .text-stroke {
@@ -1012,7 +1130,7 @@ body {
 
 /* Prevent layout shift - reserve space before image loads */
 .offer-media-slot [class*="aspect-"] {
-    background-color: #171717;
+    background-color: var(--bg-secondary);
 }
 
 /* Main offer cards - side-by-side layout */
@@ -1090,4 +1208,49 @@ body {
     .flex-col.sm\:flex-row > .offer-media-slot > .aspect-\[4\/3\] {
         min-height: 280px;
     }
+}
+
+/* ========================================
+   LOGIN / SIGNUP PAGE — LIGHT MODE FIXES
+   ======================================== */
+
+/* Toggle button hover: white/5 is invisible in light mode */
+[data-theme="light"] #theme-toggle:hover,
+[data-theme="light"] #rtl-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Image panel overlay gradient — always needs to be dark so text stays readable */
+/* The gradient is fine as-is; ensure text on image panel is always white */
+.auth-image-panel .auth-panel-text {
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Right (form) panel background — use theme variable */
+[data-theme="light"] .auth-form-panel {
+    background-color: var(--bg-primary);
+}
+
+/* Form input border lines in light mode */
+[data-theme="light"] .auth-form-panel input {
+    border-bottom-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Social buttons in light mode */
+[data-theme="light"] .auth-form-panel .social-btn {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .auth-form-panel .social-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    background-color: transparent;
+}
+
+/* Divider line in light mode */
+[data-theme="light"] .auth-divider-line {
+    background-color: var(--border-color);
 }

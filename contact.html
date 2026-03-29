@@ -14,8 +14,12 @@
                     colors: {
                         brand: {
                             red: '#DC2626',
-                            dark: '#0a0a0a',
-                            gray: '#171717'
+                            dark: 'var(--bg-primary)',
+                            gray: 'var(--bg-secondary)',
+                            card: 'var(--bg-card)',
+                            text: 'var(--text-primary)',
+                            muted: 'var(--text-secondary)',
+                            border: 'var(--border-color)'
                         }
                     },
                     fontFamily: {
@@ -26,19 +30,82 @@
             }
         }
     </script>
+    <script>
+        // Immediate theme and direction initialization
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const savedDir = localStorage.getItem('siteDirection') || 'ltr';
+            document.documentElement.setAttribute('dir', savedDir);
+            document.documentElement.classList.add(savedDir);
+        })();
+
+        // Global functions for theme and direction
+        window.setTheme = function(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('siteTheme', theme);
+            document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+            updateToggles();
+        };
+
+        window.setDirection = function(dir) {
+            document.documentElement.setAttribute('dir', dir);
+            document.documentElement.classList.remove('ltr', 'rtl');
+            document.documentElement.classList.add(dir);
+            localStorage.setItem('siteDirection', dir);
+            document.dispatchEvent(new CustomEvent('directionchange', { detail: { direction: dir } }));
+            updateToggles();
+        };
+
+        function updateToggles() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const dir = document.documentElement.getAttribute('dir') || 'ltr';
+            
+            document.querySelectorAll('#theme-toggle, #theme-toggle-mobile').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', theme === 'dark' ? 'moon-outline' : 'sunny-outline');
+            });
+            
+            document.querySelectorAll('#rtl-toggle').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', dir === 'rtl' ? 'language-outline' : 'language-outline');
+            });
+        }
+
+        // Global delegated click listener
+        document.addEventListener('click', function(e) {
+            const themeBtn = e.target.closest('#theme-toggle, #theme-toggle-mobile');
+            if (themeBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('data-theme');
+                window.setTheme(current === 'dark' ? 'light' : 'dark');
+            }
+            
+            const rtlBtn = e.target.closest('#rtl-toggle');
+            if (rtlBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('dir') || 'ltr';
+                window.setDirection(current === 'ltr' ? 'rtl' : 'ltr');
+            }
+        });
+
+        // Sync toggles on load
+        window.addEventListener('DOMContentLoaded', updateToggles);
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 
 <body
-    class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden flex flex-col min-h-screen">
+    class="bg-brand-dark text-brand-text font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden flex flex-col min-h-screen">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-brand-dark border-b border-white/10 transition-all duration-300">
-        <div class="w-full px-4 sm:px-6 lg:px-8">
+    <nav class="fixed w-full z-50 bg-brand-dark transition-all duration-300 border-b border-brand-border">
+        <div class="w-full px-4 sm:px-6 lg:px-4 xl:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 <!-- Logo -->
                 <div class="flex-shrink-0">
@@ -50,76 +117,84 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse">
+                <div class="hidden lg:flex items-center lg:space-x-2 xl:space-x-8 rtl:space-x-reverse">
                     <!-- Home Dropdown -->
                     <div class="relative group">
                         <button data-dropdown-toggle="home-dropdown"
-                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
+                            class="flex items-center gap-1 text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-bold">
                             Home <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
                         </button>
                         <div id="home-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-brand-border rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
                             <a href="index.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Home
                                 1</a>
                             <a href="home2.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Home
                                 2</a>
                         </div>
                     </div>
 
+                    <a href="about.html"
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">About</a>
+
                     <a href="shop.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Shop</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Shop</a>
                     <a href="categories.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Categories</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Categories</a>
                     <a href="offers.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Offers</a>
+                        class="text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors font-medium">Offers</a>
+
+                    <a href="contact.html"
+                        class="text-brand-red font-bold px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">Contact</a>
 
                     <!-- Dashboard Dropdown -->
                     <div class="relative group">
                         <button data-dropdown-toggle="dashboard-dropdown"
-                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">
+                            class="flex items-center gap-1 text-brand-muted hover:text-brand-text px-1 lg:px-1 xl:px-3 py-2 rounded-md text-sm xl:text-base uppercase tracking-wide transition-colors">
                             Dashboard <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
                         </button>
                         <div id="dashboard-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
+                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-brand-border rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
                             <a href="user-dashboard.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">User
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">User
                                 Dashboard</a>
                             <a href="admin-dashboard.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Admin
+                                class="block px-4 py-2 text-sm text-brand-muted hover:bg-brand-red hover:text-white transition-colors">Admin
                                 Dashboard</a>
                         </div>
                     </div>
-
-                    <a href="about.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">About</a>
-                    <a href="contact.html"
-                        class="text-brand-red font-bold px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Contact</a>
                 </div>
 
                 <!-- Icons & Mobile Button -->
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <!-- RTL Toggle -->
-                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-gray-300 hover:text-brand-red transition-colors"
-                        title="Toggle Language Direction">
-                        <ion-icon name="globe-outline" class="text-xl sm:text-2xl"></ion-icon>
+                <div class="flex items-center gap-2 sm:gap-4 lg:gap-2 xl:gap-4">
+                    <button id="rtl-toggle"
+                        class="p-2 text-brand-muted hover:text-brand-text transition-colors rounded-full hover:bg-white/10"
+                        title="Switch Language Direction">
+                        <ion-icon name="language-outline" class="text-xl sm:text-2xl"></ion-icon>
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle"
+                        class="p-2 text-brand-muted hover:text-brand-text transition-colors rounded-full hover:bg-white/10"
+                        title="Toggle Theme">
+                        <ion-icon name="moon-outline" class="text-xl sm:text-2xl"></ion-icon>
                     </button>
 
                     <a href="login.html"
-                        class="hidden md:block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors">
+                        class="hidden lg:block text-brand-muted hover:text-brand-text font-bold text-sm uppercase tracking-wide transition-colors">
                         Login
                     </a>
 
                     <a href="signup.html"
-                        class="hidden md:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
+                        class="hidden lg:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 lg:px-5 py-2 lg:py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
                         Join
                     </a>
 
                     <!-- Mobile menu button -->
                     <div class="flex lg:hidden">
                         <button id="mobile-menu-btn"
-                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-brand-muted hover:text-brand-text hover:bg-white/10 focus:outline-none">
                             <ion-icon name="menu-outline" class="text-2xl sm:text-3xl"></ion-icon>
                         </button>
                     </div>
@@ -128,116 +203,117 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-white/10">
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-brand-border">
             <div class="px-4 sm:px-6 lg:px-8 pt-2 pb-3 space-y-1 text-center">
                 <!-- Mobile Home Dropdown -->
                 <div class="space-y-1">
                     <button data-dropdown-toggle="mobile-home-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
+                        class="w-full flex items-center justify-center gap-2 text-brand-muted hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
                         Home <ion-icon name="chevron-down-outline"></ion-icon>
                     </button>
                     <div id="mobile-home-dropdown" data-dropdown-menu
                         class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
                         <a href="index.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:bg-white/10">Home
                             1</a>
                         <a href="home2.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:bg-white/10">Home
                             2</a>
                     </div>
                 </div>
 
+                <a href="about.html"
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-all">About</a>
+
                 <a href="shop.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Shop</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-all">Shop</a>
                 <a href="categories.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Categories</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-all">Categories</a>
                 <a href="offers.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Offers</a>
+                    class="text-brand-muted hover:text-brand-text block px-3 py-2 rounded-md text-base font-medium uppercase transition-all">Offers</a>
+
+                <a href="contact.html"
+                    class="text-brand-red font-bold block px-3 py-2 rounded-md text-base uppercase">Contact</a>
 
                 <!-- Mobile Dashboard Dropdown -->
                 <div class="space-y-1">
                     <button data-dropdown-toggle="mobile-dashboard-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase">
+                        class="w-full flex items-center justify-center gap-2 text-brand-muted hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase">
                         Dashboard <ion-icon name="chevron-down-outline"></ion-icon>
                     </button>
                     <div id="mobile-dashboard-dropdown" data-dropdown-menu
                         class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
                         <a href="user-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">User
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:bg-white/10">User
                             Dashboard</a>
                         <a href="admin-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Admin
+                            class="block px-3 py-2 rounded-md text-sm text-brand-muted hover:text-brand-red hover:bg-white/10">Admin
                             Dashboard</a>
                     </div>
-                </div>
-
-                <a href="about.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">About</a>
-                <a href="contact.html"
-                    class="text-brand-red font-bold block px-3 py-2 rounded-md text-base uppercase">Contact</a>                
+                </div>                
                 <!-- Mobile Auth Links -->
-                <div class="pt-4 border-t border-white/10 mt-4 flex flex-col gap-2 px-4">
+                <div class="pt-4 border-t border-brand-border mt-4 flex flex-col gap-2 px-4 text-center lg:hidden">
                     <a href="login.html"
-                        class="block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors py-2">
+                        class="block text-brand-muted hover:text-brand-text font-bold text-sm uppercase tracking-wide transition-colors py-2">
                         Login
                     </a>
                     <a href="signup.html"
-                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all text-center">
+                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 lg:px-3 xl:px-4 py-2 lg:py-1.5 xl:py-2 rounded-full transition-all text-center">
                         Join Now
                     </a>
                 </div>            </div>
         </div>
     </nav>
 
-    <main class="flex-grow pt-24 pb-12">
+    <main class="flex-grow pt-24 lg:pt-32 pb-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h1 class="font-heading text-4xl md:text-5xl font-bold uppercase mb-4">Get In <span
                         class="text-brand-red">Touch</span></h1>
-                <p class="text-gray-400 max-w-2xl mx-auto">Have a question? We're here to help. Reach out to our team.
+                <p class="text-brand-muted max-w-2xl mx-auto">Have a question? We're here to help. Reach out to our team.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <!-- Contact Form -->
-                <div class="bg-brand-gray p-8 rounded-2xl border border-white/10">
+                <div class="bg-brand-gray p-8 rounded-2xl border border-brand-border">
                     <form class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <label for="first-name"
-                                    class="block text-sm font-medium text-gray-400 mb-2 uppercase">First Name</label>
+                                    class="block text-sm font-medium text-brand-muted mb-2 uppercase">First Name</label>
                                 <input type="text" id="first-name"
-                                    class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                                    class="w-full bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-brand-text focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
                             </div>
                             <div>
                                 <label for="last-name"
-                                    class="block text-sm font-medium text-gray-400 mb-2 uppercase">Last Name</label>
+                                    class="block text-sm font-medium text-brand-muted mb-2 uppercase">Last Name</label>
                                 <input type="text" id="last-name"
-                                    class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                                    class="w-full bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
                             </div>
                         </div>
                         <div>
                             <label for="email"
-                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Email</label>
+                                class="block text-sm font-medium text-brand-muted mb-2 uppercase">Email</label>
                             <input type="email" id="email"
-                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                                class="w-full bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-brand-text focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
                         </div>
                         <div>
                             <label for="subject"
-                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Subject</label>
+                                class="block text-sm font-medium text-brand-muted mb-2 uppercase">Subject</label>
                             <select id="subject"
-                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
-                                <option>Order Inquiry</option>
-                                <option>Product Support</option>
-                                <option>Partnership</option>
-                                <option>Other</option>
+                                class="w-full bg-black/5 dark:bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-brand-text focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red">
+                                <option class="text-brand-text bg-brand-dark">Order Inquiry</option>
+                                <option class="text-brand-text bg-brand-dark">Product Support</option>
+                                <option class="text-brand-text bg-brand-dark">Partnership</option>
+                                <option class="text-brand-text bg-brand-dark">Other</option>
                             </select>
                         </div>
                         <div>
                             <label for="message"
-                                class="block text-sm font-medium text-gray-400 mb-2 uppercase">Message</label>
+                                class="block text-sm font-medium text-brand-muted mb-2 uppercase">Message</label>
                             <textarea id="message" rows="4"
-                                class="w-full bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red"></textarea>
+                                class="w-full bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-brand-text focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red"></textarea>
                         </div>
                         <button type="submit"
                             class="w-full bg-brand-red hover:bg-red-700 text-white font-bold py-4 rounded-md uppercase tracking-wider transition-all transform hover:scale-[1.02]">
@@ -249,39 +325,39 @@
                 <!-- Info & Map -->
                 <div class="space-y-8">
                     <!-- Info Cards -->
-                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                    <div class="bg-brand-gray p-6 rounded-xl border border-brand-border flex items-start gap-4">
                         <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
                             <ion-icon name="location-outline"></ion-icon>
                         </div>
                         <div>
                             <h3 class="font-bold text-lg uppercase mb-1">Our Location</h3>
-                            <p class="text-gray-400">123 Sport Ave, Athletic City, SP 90210</p>
+                            <p class="text-brand-muted">123 Sport Ave, Athletic City, SP 90210</p>
                         </div>
                     </div>
 
-                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                    <div class="bg-brand-gray p-6 rounded-xl border border-brand-border flex items-start gap-4">
                         <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
                             <ion-icon name="mail-outline"></ion-icon>
                         </div>
                         <div>
                             <h3 class="font-bold text-lg uppercase mb-1">Email Us</h3>
-                            <p class="text-gray-400">support@titansports.com</p>
+                            <p class="text-brand-muted">support@titansports.com</p>
                         </div>
                     </div>
 
-                    <div class="bg-brand-gray p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                    <div class="bg-brand-gray p-6 rounded-xl border border-brand-border flex items-start gap-4">
                         <div class="bg-white/5 p-3 rounded-full text-brand-red text-2xl">
                             <ion-icon name="call-outline"></ion-icon>
                         </div>
                         <div>
                             <h3 class="font-bold text-lg uppercase mb-1">Call Us</h3>
-                            <p class="text-gray-400">+1 (555) 123-4567</p>
+                            <p class="text-brand-muted">+1 (555) 123-4567</p>
                         </div>
                     </div>
 
                     <!-- Map Placeholder -->
                     <div
-                        class="w-full h-64 bg-white/5 rounded-2xl border border-white/10 overflow-hidden relative group">
+                        class="w-full h-64 bg-white/5 rounded-2xl border border-brand-border overflow-hidden relative group">
                         <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop"
                             class="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity">
                         <div class="absolute inset-0 flex items-center justify-center">
@@ -299,34 +375,34 @@
         <h2 class="font-heading text-3xl font-bold uppercase mb-8 text-center">Frequently Asked <span
                 class="text-brand-red">Questions</span></h2>
         <div class="space-y-4">
-            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+            <div class="bg-brand-gray border border-brand-border rounded-lg p-6">
                 <h3 class="font-bold text-lg mb-2">How do I track my order?</h3>
-                <p class="text-gray-400 text-sm">Once your order ships, you will receive an email with a tracking
+                <p class="text-brand-muted text-sm">Once your order ships, you will receive an email with a tracking
                     number. You can also track it in your dashboard.</p>
             </div>
-            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+            <div class="bg-brand-gray border border-brand-border rounded-lg p-6">
                 <h3 class="font-bold text-lg mb-2">What is your return policy?</h3>
-                <p class="text-gray-400 text-sm">We offer a 30-day return policy for unused items in original packaging.
+                <p class="text-brand-muted text-sm">We offer a 30-day return policy for unused items in original packaging.
                     Contact support to initiate a return.</p>
             </div>
-            <div class="bg-brand-gray border border-white/10 rounded-lg p-6">
+            <div class="bg-brand-gray border border-brand-border rounded-lg p-6">
                 <h3 class="font-bold text-lg mb-2">Do you ship internationally?</h3>
-                <p class="text-gray-400 text-sm">Yes, we ship to over 50 countries worldwide. Shipping times vary by
+                <p class="text-brand-muted text-sm">Yes, we ship to over 50 countries worldwide. Shipping times vary by
                     location.</p>
             </div>
         </div>
     </section>
 
     <!-- Newsletter Section -->
-    <section class="bg-brand-gray py-12 mt-20 border-t border-white/10">
+    <section class="bg-brand-gray py-12 mt-20 border-t border-brand-border">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="font-heading text-3xl font-bold uppercase mb-4">Join The <span class="text-brand-red">Team</span>
             </h2>
-            <p class="text-gray-400 mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for early access to drops,
+            <p class="text-brand-muted mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for early access to drops,
                 exclusive discounts, and training tips from the pros.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
                 <input type="email" placeholder="Your email address"
-                    class="flex-grow bg-brand-dark border border-white/10 rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red transition-colors">
+                    class="flex-grow bg-brand-dark border border-brand-border rounded-md px-4 py-3 text-white focus:outline-none focus:border-brand-red transition-colors">
                 <button
                     class="bg-brand-red hover:bg-red-700 text-white font-bold px-8 py-3 rounded-md uppercase tracking-wide transition-colors">Sign
                     Up</button>
@@ -334,31 +410,31 @@
         </div>
     </section>
 
-    <footer class="bg-black border-t border-white/10 pt-16 pb-8 mt-auto">
+    <footer class="bg-brand-gray border-t border-brand-border pt-16 pb-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
                 <!-- Branding -->
                 <div class="sm:col-span-2 lg:col-span-1">
                     <a href="index.html" class="flex items-center gap-2 mb-4">
                         <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
-                        <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
+                        <span class="font-heading text-2xl font-bold tracking-wider text-brand-text">TITAN<span
                                 class="text-brand-red">SPORTS</span></span>
                     </a>
-                    <p class="text-gray-500 text-sm mb-6">
+                    <p class="text-brand-muted text-sm mb-6">
                         Equipping athletes with world-class gear. Designed for performance, built for champions.
                     </p>
                     <!-- Social Icons -->
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-instagram"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-twitter"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-youtube"></ion-icon>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
+                        <a href="#" class="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-brand-muted hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
                             <ion-icon name="logo-facebook"></ion-icon>
                         </a>
                     </div>
@@ -366,8 +442,8 @@
 
                 <!-- Shop Links -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Shop</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Shop</h4>
+                    <ul class="space-y-2 text-brand-muted text-sm">
                         <li><a href="shop.html" class="hover:text-brand-red transition-colors">All Products</a></li>
                         <li><a href="#" class="hover:text-brand-red transition-colors">New Arrivals</a></li>
                         <li><a href="#" class="hover:text-brand-red transition-colors">Best Sellers</a></li>
@@ -377,8 +453,8 @@
 
                 <!-- Company Links -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Company</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Company</h4>
+                    <ul class="space-y-2 text-brand-muted text-sm">
                         <li><a href="about.html" class="hover:text-brand-red transition-colors">About Us</a></li>
                         <li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
                         <li><a href="categories.html" class="hover:text-brand-red transition-colors">Categories</a></li>
@@ -386,20 +462,19 @@
                     </ul>
                 </div>
 
-                <!-- Newsletter -->
                 <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Newsletter</h4>
-                    <p class="text-gray-500 text-sm mb-4">Subscribe for updates and exclusive offers.</p>
+                    <h4 class="font-heading text-lg font-bold uppercase mb-4 text-brand-text">Newsletter</h4>
+                    <p class="text-brand-muted text-sm mb-4">Subscribe for updates and exclusive offers.</p>
                     <div class="flex flex-col gap-3">
                         <input type="email" placeholder="Enter your email"
-                            class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-red transition-colors">
+                            class="bg-brand-muted/10 border border-brand-border rounded-md px-4 py-2 text-brand-text text-sm focus:outline-none focus:border-brand-red transition-colors">
                         <button
                             class="bg-brand-red hover:bg-red-700 text-white font-bold py-2 rounded-md uppercase tracking-wide text-sm transition-colors">Subscribe</button>
                     </div>
                 </div>
             </div>
 
-            <div class="text-center pt-8 border-t border-white/10 text-gray-600 text-xs">
+            <div class="text-center pt-8 border-t border-brand-border text-brand-muted text-xs">
                 &copy; 2024 Titan Sports. All rights reserved.
             </div>
         </div>

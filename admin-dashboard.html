@@ -14,8 +14,12 @@
                     colors: {
                         brand: {
                             red: '#DC2626',
-                            dark: '#0a0a0a',
-                            gray: '#171717'
+                            dark: 'var(--bg-primary)',
+                            gray: 'var(--bg-secondary)',
+                            card: 'var(--bg-card)',
+                            text: 'var(--text-primary)',
+                            muted: 'var(--text-secondary)',
+                            border: 'var(--border-color)'
                         }
                     },
                     fontFamily: {
@@ -26,18 +30,81 @@
             }
         }
     </script>
+    <script>
+        // Immediate theme and direction initialization
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const savedDir = localStorage.getItem('siteDirection') || 'ltr';
+            document.documentElement.setAttribute('dir', savedDir);
+            document.documentElement.classList.add(savedDir);
+        })();
+
+        // Global functions for theme and direction
+        window.setTheme = function(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('siteTheme', theme);
+            document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+            updateToggles();
+        };
+
+        window.setDirection = function(dir) {
+            document.documentElement.setAttribute('dir', dir);
+            document.documentElement.classList.remove('ltr', 'rtl');
+            document.documentElement.classList.add(dir);
+            localStorage.setItem('siteDirection', dir);
+            document.dispatchEvent(new CustomEvent('directionchange', { detail: { direction: dir } }));
+            updateToggles();
+        };
+
+        function updateToggles() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const dir = document.documentElement.getAttribute('dir') || 'ltr';
+            
+            document.querySelectorAll('#theme-toggle, #theme-toggle-mobile').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', theme === 'dark' ? 'moon-outline' : 'sunny-outline');
+            });
+            
+            document.querySelectorAll('#rtl-toggle').forEach(btn => {
+                const icon = btn.querySelector('ion-icon');
+                if (icon) icon.setAttribute('name', dir === 'rtl' ? 'language-outline' : 'language-outline');
+            });
+        }
+
+        // Global delegated click listener
+        document.addEventListener('click', function(e) {
+            const themeBtn = e.target.closest('#theme-toggle, #theme-toggle-mobile');
+            if (themeBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('data-theme');
+                window.setTheme(current === 'dark' ? 'light' : 'dark');
+            }
+            
+            const rtlBtn = e.target.closest('#rtl-toggle');
+            if (rtlBtn) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('dir') || 'ltr';
+                window.setDirection(current === 'ltr' ? 'rtl' : 'ltr');
+            }
+        });
+
+        // Sync toggles on load
+        window.addEventListener('DOMContentLoaded', updateToggles);
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 
 <body
-    class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-red selection:text-white overflow-x-hidden flex flex-col min-h-screen">
+    class="bg-brand-dark text-brand-text font-sans antialiased selection:bg-brand-red selection:text-brand-text overflow-x-hidden flex flex-col min-h-screen">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-brand-dark border-b border-white/10 transition-all duration-300">
+    <nav class="fixed w-full z-50 bg-brand-dark border-b border-brand-border transition-all duration-300 dashboard-nav">
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 <!-- Logo -->
@@ -49,146 +116,29 @@
                     </a>
                 </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse">
-                    <!-- Home Dropdown -->
-                    <div class="relative group">
-                        <button data-dropdown-toggle="home-dropdown"
-                            class="flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
-                            Home <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
-                        </button>
-                        <div id="home-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-48 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
-                            <a href="index.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
-                                1</a>
-                            <a href="home2.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">Home
-                                2</a>
-                        </div>
-                    </div>
 
-                    <a href="shop.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Shop</a>
-                    <a href="categories.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Categories</a>
-                    <a href="offers.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Offers</a>
-
-                    <!-- Dashboard Dropdown -->
-                    <div class="relative group">
-                        <button data-dropdown-toggle="dashboard-dropdown"
-                            class="flex items-center gap-1 text-brand-red px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors font-bold">
-                            Dashboard <ion-icon name="chevron-down-outline" class="text-xs"></ion-icon>
-                        </button>
-                        <div id="dashboard-dropdown" data-dropdown-menu
-                            class="hidden absolute top-full ltr:left-0 rtl:right-0 w-56 bg-brand-dark border border-white/10 rounded-md shadow-xl py-2 opacity-0 scale-95 transition-all duration-200 ltr:origin-top-left rtl:origin-top-right z-50">
-                            <a href="user-dashboard.html"
-                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-red hover:text-white transition-colors">User
-                                Dashboard</a>
-                            <a href="admin-dashboard.html"
-                                class="block px-4 py-2 text-sm text-white bg-brand-red transition-colors">Admin
-                                Dashboard</a>
-                        </div>
-                    </div>
-
-                    <a href="about.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">About</a>
-                    <a href="contact.html"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm uppercase tracking-wide transition-colors">Contact</a>
-                </div>
 
                 <!-- Icons & Mobile Button -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     <!-- RTL Toggle -->
-                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-gray-300 hover:text-brand-red transition-colors"
+                    <button id="rtl-toggle" class="p-1.5 sm:p-2 text-brand-muted hover:text-brand-red transition-colors"
                         title="Toggle Language Direction">
-                        <ion-icon name="globe-outline" class="text-xl sm:text-2xl"></ion-icon>
+                        <ion-icon name="language-outline" class="text-xl sm:text-2xl"></ion-icon>
                     </button>
 
-                    <a href="login.html"
-                        class="hidden md:block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors">
-                        Login
-                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-1.5 sm:p-2 text-brand-muted hover:text-brand-red transition-colors"
+                        title="Toggle Color Theme">
+                        <ion-icon name="moon-outline" class="text-xl sm:text-2xl"></ion-icon>
+                    </button>
 
-                    <a href="signup.html"
-                        class="hidden md:block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all shadow-lg hover:shadow-red-900/50 transform hover:scale-105">
-                        Join
-                    </a>
 
-                    <!-- Mobile menu button -->
-                    <div class="flex lg:hidden">
-                        <button id="mobile-menu-btn"
-                            class="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
-                            <ion-icon name="menu-outline" class="text-2xl sm:text-3xl"></ion-icon>
-                        </button>
-                    </div>
+
+
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-white/10">
-            <div class="px-4 sm:px-6 lg:px-8 pt-2 pb-3 space-y-1 text-center">
-                <!-- Mobile Home Dropdown -->
-                <div class="space-y-1">
-                    <button data-dropdown-toggle="mobile-home-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
-                        Home <ion-icon name="chevron-down-outline"></ion-icon>
-                    </button>
-                    <div id="mobile-home-dropdown" data-dropdown-menu
-                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
-                        <a href="index.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
-                            1</a>
-                        <a href="home2.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">Home
-                            2</a>
-                    </div>
-                </div>
-
-                <a href="shop.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Shop</a>
-                <a href="categories.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Categories</a>
-                <a href="offers.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Offers</a>
-
-                <!-- Mobile Dashboard Dropdown -->
-                <div class="space-y-1">
-                    <button data-dropdown-toggle="mobile-dashboard-dropdown"
-                        class="w-full flex items-center justify-center gap-2 text-brand-red hover:text-white px-3 py-2 rounded-md text-base font-bold uppercase">
-                        Dashboard <ion-icon name="chevron-down-outline"></ion-icon>
-                    </button>
-                    <div id="mobile-dashboard-dropdown" data-dropdown-menu
-                        class="hidden bg-white/5 rounded-md py-2 space-y-1 mx-4">
-                        <a href="user-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-gray-300 hover:text-brand-red hover:bg-white/10">User
-                            Dashboard</a>
-                        <a href="admin-dashboard.html"
-                            class="block px-3 py-2 rounded-md text-sm text-white bg-brand-red">Admin
-                            Dashboard</a>
-                    </div>
-                </div>
-
-                <a href="about.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">About</a>
-                <a href="contact.html"
-                    class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium uppercase">Contact</a>
-                
-                <!-- Mobile Auth Links -->
-                <div class="pt-4 border-t border-white/10 mt-4 flex flex-col gap-2 px-4">
-                    <a href="login.html"
-                        class="block text-gray-300 hover:text-white font-bold text-sm uppercase tracking-wide transition-colors py-2">
-                        Login
-                    </a>
-                    <a href="signup.html"
-                        class="block bg-brand-red hover:bg-red-700 text-white font-bold text-sm uppercase tracking-wide px-4 py-2 rounded-full transition-all text-center">
-                        Join Now
-                    </a>
-                </div>
-            </div>
-        </div>
     </nav>
 
     <main class="flex-grow pt-16 sm:pt-20 pb-8 sm:pb-12">
@@ -202,24 +152,24 @@
 
         <!-- Sidebar -->
         <aside id="sidebar"
-            class="sidebar-panel fixed top-16 sm:top-20 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] w-64 bg-brand-gray z-40 transition-transform duration-300 ease-in-out flex flex-col border-white/10 ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l">
+            class="sidebar-panel fixed top-16 sm:top-20 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] w-64 bg-brand-gray z-40 transition-transform duration-300 ease-in-out flex flex-col border-brand-border ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l">
             
             <!-- Sidebar Header - Admin Profile Section -->
-            <div class="p-4 border-b border-white/10 flex-shrink-0">
+            <div class="p-4 border-b border-brand-border flex-shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-full bg-brand-red/20 flex items-center justify-center flex-shrink-0 border-2 border-brand-red">
                         <ion-icon name="shield-checkmark" class="text-xl text-brand-red"></ion-icon>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <h3 class="font-bold text-white text-sm truncate">Admin Panel</h3>
-                        <p class="text-xs text-gray-400">Super Admin</p>
+                        <h3 class="font-bold text-brand-text text-sm truncate">Admin Panel</h3>
+                        <p class="text-xs text-brand-muted">Super Admin</p>
                     </div>
                 </div>
             </div>
 
             <!-- Sidebar Navigation -->
             <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-3">Main Menu</p>
+                <p class="text-[10px] font-bold text-brand-muted uppercase tracking-widest px-3 mb-3">Main Menu</p>
                 
                 <a href="admin-dashboard.html"
                     class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg bg-brand-red text-white transition-all">
@@ -227,41 +177,41 @@
                     <span class="text-sm font-medium">Overview</span>
                 </a>
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-muted/10 transition-all">
                     <ion-icon name="cube-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Products</span>
                 </a>
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-muted/10 transition-all">
                     <ion-icon name="cart-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Orders</span>
                 </a>
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-muted/10 transition-all">
                     <ion-icon name="people-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Users</span>
                 </a>
                 
                 <div class="pt-4 pb-2">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-3">System</p>
+                    <p class="text-[10px] font-bold text-brand-muted uppercase tracking-widest px-3 mb-3">System</p>
                 </div>
                 
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-muted/10 transition-all">
                     <ion-icon name="settings-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Settings</span>
                 </a>
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-muted/10 transition-all">
                     <ion-icon name="analytics-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Reports</span>
                 </a>
             </nav>
 
             <!-- Sidebar Footer -->
-            <div class="p-4 border-t border-white/10 flex-shrink-0">
+            <div class="p-4 border-t border-brand-border flex-shrink-0">
                 <a href="#"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all">
+                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-brand-red/10 transition-all">
                     <ion-icon name="log-out-outline" class="text-lg flex-shrink-0 w-5"></ion-icon>
                     <span class="text-sm font-medium">Log Out</span>
                 </a>
@@ -272,13 +222,13 @@
         <div class="content-area px-4 sm:px-6 lg:px-8 ltr:lg:ml-64 rtl:lg:mr-64">
             <div class="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
                 <div>
-                    <h1 class="font-heading text-2xl sm:text-3xl md:text-4xl font-bold uppercase mb-1 sm:mb-2">Dashboard <span
+                    <h1 class="font-heading text-2xl sm:text-3xl md:text-4xl font-bold uppercase mb-1 sm:mb-2 text-brand-text">Dashboard <span
                             class="text-brand-red">Overview</span></h1>
-                    <p class="text-gray-400 text-sm sm:text-base">Welcome back, Admin. Here is what's happening today.</p>
+                    <p class="text-brand-muted text-sm sm:text-base">Welcome back, Admin. Here is what's happening today.</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
                     <button
-                        class="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-md text-sm transition-colors border border-white/5">
+                        class="flex items-center justify-center gap-2 bg-brand-muted/10 hover:bg-brand-muted/20 px-4 py-2 rounded-md text-sm transition-colors border border-brand-border text-brand-text">
                         <ion-icon name="download-outline"></ion-icon> Export
                     </button>
                     <button
@@ -290,35 +240,35 @@
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
-                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-white/10">
-                    <p class="text-gray-400 text-xs uppercase font-bold tracking-widest mb-2">Total Revenue</p>
-                    <h3 class="text-3xl font-bold font-heading mb-1 text-white">$45,231</h3>
+                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-brand-border">
+                    <p class="text-brand-muted text-xs uppercase font-bold tracking-widest mb-2">Total Revenue</p>
+                    <h3 class="text-3xl font-bold font-heading mb-1 text-brand-text">$45,231</h3>
                     <div class="flex items-center gap-1 text-green-400 text-xs font-bold">
                         <ion-icon name="trending-up-outline"></ion-icon> +20.1% <span
-                            class="text-gray-500 font-normal">vs last month</span>
+                            class="text-brand-muted font-normal">vs last month</span>
                     </div>
                 </div>
-                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-white/10">
-                    <p class="text-gray-400 text-xs uppercase font-bold tracking-widest mb-2">Active Orders</p>
-                    <h3 class="text-3xl font-bold font-heading mb-1 text-white">+573</h3>
+                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-brand-border">
+                    <p class="text-brand-muted text-xs uppercase font-bold tracking-widest mb-2">Active Orders</p>
+                    <h3 class="text-3xl font-bold font-heading mb-1 text-brand-text">+573</h3>
                     <div class="flex items-center gap-1 text-green-400 text-xs font-bold">
                         <ion-icon name="trending-up-outline"></ion-icon> +12.5% <span
-                            class="text-gray-500 font-normal">vs last month</span>
+                            class="text-brand-muted font-normal">vs last month</span>
                     </div>
                 </div>
-                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-white/10">
-                    <p class="text-gray-400 text-xs uppercase font-bold tracking-widest mb-2">New Customers</p>
-                    <h3 class="text-3xl font-bold font-heading mb-1 text-white">2,345</h3>
+                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-brand-border">
+                    <p class="text-brand-muted text-xs uppercase font-bold tracking-widest mb-2">New Customers</p>
+                    <h3 class="text-3xl font-bold font-heading mb-1 text-brand-text">2,345</h3>
                     <div class="flex items-center gap-1 text-red-400 text-xs font-bold">
                         <ion-icon name="trending-down-outline"></ion-icon> -4.3% <span
-                            class="text-gray-500 font-normal">vs last month</span>
+                            class="text-brand-muted font-normal">vs last month</span>
                     </div>
                 </div>
-                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-white/10">
-                    <p class="text-gray-400 text-xs uppercase font-bold tracking-widest mb-2">Pending Items</p>
-                    <h3 class="text-3xl font-bold font-heading mb-1 text-white">12</h3>
-                    <div class="flex items-center gap-1 text-gray-400 text-xs font-bold">
-                        <span class="text-gray-500 font-normal">Requires attention</span>
+                <div class="bg-brand-gray p-4 sm:p-6 rounded-xl border border-brand-border">
+                    <p class="text-brand-muted text-xs uppercase font-bold tracking-widest mb-2">Pending Items</p>
+                    <h3 class="text-3xl font-bold font-heading mb-1 text-brand-text">12</h3>
+                    <div class="flex items-center gap-1 text-brand-muted text-xs font-bold">
+                        <span class="text-brand-muted font-normal">Requires attention</span>
                     </div>
                 </div>
             </div>
@@ -326,9 +276,9 @@
             <!-- Analytics Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
                 <!-- Revenue Line Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10 group">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border group">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Revenue Growth</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Revenue Growth</h3>
                         <ion-icon name="stats-chart" class="text-brand-red"></ion-icon>
                     </div>
                     <div class="relative h-32 w-full">
@@ -359,15 +309,15 @@
                             </path>
                         </svg>
                     </div>
-                    <div class="flex justify-between mt-4 text-[10px] text-gray-500 font-bold uppercase">
+                    <div class="flex justify-between mt-4 text-[10px] text-brand-muted font-bold uppercase">
                         <span>Jan</span><span>Mar</span><span>May</span><span>Jul</span>
                     </div>
                 </div>
 
                 <!-- Category Donut Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Category Sales</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Category Sales</h3>
                         <ion-icon name="pie-chart" class="text-blue-500"></ion-icon>
                     </div>
                     <div class="flex items-center gap-4">
@@ -387,7 +337,7 @@
                                 <span class="text-xs font-bold font-heading">85%</span>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-1 text-[10px] uppercase font-bold text-gray-400">
+                        <div class="flex flex-col gap-1 text-[10px] uppercase font-bold text-brand-muted">
                             <div class="flex items-center gap-1">
                                 <div class="w-2 h-2 rounded-full bg-brand-red"></div> Footwear
                             </div>
@@ -402,39 +352,39 @@
                 </div>
 
                 <!-- User Activity Bar Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">User Activity</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">User Activity</h3>
                         <ion-icon name="pulse" class="text-green-500"></ion-icon>
                     </div>
                     <div class="flex items-end justify-between h-24 gap-2">
-                        <div class="w-full bg-white/5 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/2">
+                        <div class="w-full bg-brand-muted/10 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/2">
                         </div>
-                        <div class="w-full bg-white/5 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-3/4">
+                        <div class="w-full bg-brand-muted/10 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-3/4">
                         </div>
                         <div class="w-full bg-brand-red rounded-t-sm h-full shadow-[0_0_10px_#DC2626]"></div>
-                        <div class="w-full bg-white/5 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-2/3">
+                        <div class="w-full bg-brand-muted/10 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-2/3">
                         </div>
-                        <div class="w-full bg-white/5 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/4">
+                        <div class="w-full bg-brand-muted/10 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/4">
                         </div>
-                        <div class="w-full bg-white/5 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/2">
+                        <div class="w-full bg-brand-muted/10 rounded-t-sm group-hover:bg-brand-red/20 transition-all h-1/2">
                         </div>
                     </div>
-                    <div class="flex justify-between mt-3 text-[10px] text-gray-500 font-bold">
+                    <div class="flex justify-between mt-3 text-[10px] text-brand-muted font-bold">
                         <span>8A</span><span>12P</span><span>4P</span><span>8P</span>
                     </div>
                 </div>
 
                 <!-- Order Progress Radial -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Order Success</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Order Success</h3>
                         <div class="flex items-center gap-1 text-xs text-green-400 font-bold">98% <ion-icon
                                 name="checkmark-circle"></ion-icon></div>
                     </div>
                     <div class="relative w-24 h-24 mx-auto">
                         <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
-                            <circle cx="18" cy="18" r="16" fill="transparent" stroke="#ffffff10" stroke-width="3" />
+                            <circle cx="18" cy="18" r="16" fill="transparent" stroke="var(--border-color)" stroke-width="3" />
                             <circle cx="18" cy="18" r="16" fill="transparent" stroke="#DC2626" stroke-width="3"
                                 stroke-dasharray="98 100" stroke-linecap="round" class="animate-[draw_1.5s_ease-out]">
                                 <style>
@@ -451,22 +401,22 @@
                             </circle>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <ion-icon name="cart" class="text-2xl text-white/20"></ion-icon>
+                            <ion-icon name="cart" class="text-2xl text-brand-text/20"></ion-icon>
                         </div>
                     </div>
-                    <p class="text-[10px] text-center text-gray-500 mt-4 uppercase font-bold">Overall Fulfillment</p>
+                    <p class="text-[10px] text-center text-brand-muted mt-4 uppercase font-bold">Overall Fulfillment</p>
                 </div>
 
                 <!-- Traffic Source Donut Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Traffic Source</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Traffic Source</h3>
                         <ion-icon name="analytics" class="text-cyan-500"></ion-icon>
                     </div>
                     <div class="relative w-24 h-24 mx-auto">
                         <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
                             <!-- Background circle -->
-                            <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#ffffff05" stroke-width="3.5" />
+                            <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="var(--glass-bg)" stroke-width="3.5" />
                             <!-- Donut segments -->
                             <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#06b6d4" stroke-width="3.5"
                                 stroke-dasharray="45 100" stroke-linecap="round" class="transition-all duration-1000" />
@@ -484,23 +434,23 @@
                     <div class="flex justify-center gap-3 mt-3">
                         <div class="flex items-center gap-1 text-[9px] font-bold uppercase">
                             <span class="w-2 h-2 rounded-full bg-cyan-500"></span> <span
-                                class="text-gray-500">Direct</span>
+                                class="text-brand-muted">Direct</span>
                         </div>
                         <div class="flex items-center gap-1 text-[9px] font-bold uppercase">
                             <span class="w-2 h-2 rounded-full bg-purple-500"></span> <span
-                                class="text-gray-500">Social</span>
+                                class="text-brand-muted">Social</span>
                         </div>
                         <div class="flex items-center gap-1 text-[9px] font-bold uppercase">
                             <span class="w-2 h-2 rounded-full bg-orange-500"></span> <span
-                                class="text-gray-500">Ads</span>
+                                class="text-brand-muted">Ads</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Inventory Status Heatmap -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Stock Levels</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Stock Levels</h3>
                         <ion-icon name="apps" class="text-orange-500"></ion-icon>
                     </div>
                     <div class="grid grid-cols-7 gap-1.5 h-24">
@@ -529,20 +479,20 @@
                         <div class="bg-green-500/60 rounded-sm"></div>
                         <div class="bg-green-500/50 rounded-sm"></div>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-2 text-center uppercase font-bold tracking-widest">Last 3
+                    <p class="text-[10px] text-brand-muted mt-2 text-center uppercase font-bold tracking-widest">Last 3
                         Weeks</p>
                 </div>
 
                 <!-- Conversion Rate Gauge Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Conversion Rate</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Conversion Rate</h3>
                         <ion-icon name="speedometer" class="text-green-500"></ion-icon>
                     </div>
                     <div class="relative w-24 h-20 mx-auto">
                         <svg viewBox="0 0 100 60" class="w-full h-full">
                             <!-- Background arc -->
-                            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="transparent" stroke="#ffffff05" stroke-width="8"
+                            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="transparent" stroke="var(--glass-bg)" stroke-width="8"
                                 stroke-linecap="round" />
                             <!-- Gradient arc segments -->
                             <path d="M 10 50 A 40 40 0 0 1 30 20" fill="transparent" stroke="#ef4444" stroke-width="8"
@@ -574,14 +524,14 @@
                             <circle cx="50" cy="50" r="4" fill="#10b981" />
                         </svg>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-2 text-center uppercase font-bold tracking-widest">3.8% Rate
+                    <p class="text-[10px] text-brand-muted mt-2 text-center uppercase font-bold tracking-widest">3.8% Rate
                     </p>
                 </div>
 
                 <!-- Customer Retention Area Chart -->
-                <div class="bg-brand-gray p-6 rounded-xl border border-white/10 group">
+                <div class="bg-brand-gray p-6 rounded-xl border border-brand-border group">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Retention Rate</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Retention Rate</h3>
                         <div class="text-xs text-purple-400 font-bold">+8.3% Growth</div>
                     </div>
                     <div class="relative h-24 w-full">
@@ -605,23 +555,23 @@
                             <circle cx="200" cy="25" r="4" fill="#a855f7" class="shadow-[0_0_8px_#a855f7]" />
                         </svg>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-2 text-center uppercase font-bold tracking-widest">82%
+                    <p class="text-[10px] text-brand-muted mt-2 text-center uppercase font-bold tracking-widest">82%
                         Current</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10">
                 <!-- Recent Orders Table -->
-                <div class="lg:col-span-2 bg-brand-gray rounded-xl border border-white/10 overflow-hidden">
-                    <div class="p-4 sm:p-6 border-b border-white/10 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                <div class="lg:col-span-2 bg-brand-gray rounded-xl border border-brand-border overflow-hidden">
+                    <div class="p-4 sm:p-6 border-b border-brand-border flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                         <h3 class="font-heading text-lg sm:text-xl font-bold uppercase">Recent Transaction</h3>
                         <a href="#"
-                            class="text-xs text-brand-red hover:text-white uppercase font-bold tracking-wide transition-colors">View
+                            class="text-xs text-brand-red hover:text-brand-text uppercase font-bold tracking-wide transition-colors">View
                             All</a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left min-w-[400px]">
-                            <thead class="bg-white/5 text-gray-400 text-xs uppercase font-bold">
+                            <thead class="bg-brand-muted/10 text-brand-muted text-xs uppercase font-bold">
                                 <tr>
                                     <th class="px-4 sm:px-6 py-3 sm:py-4">Customer</th>
                                     <th class="px-4 sm:px-6 py-3 sm:py-4">Order ID</th>
@@ -629,9 +579,9 @@
                                     <th class="px-4 sm:px-6 py-3 sm:py-4">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/10 text-sm">
-                                <tr class="hover:bg-white/5 transition-colors">
-                                    <td class="px-6 py-4 font-bold text-white">
+                            <tbody class="divide-y divide-brand-border text-sm">
+                                <tr class="hover:bg-brand-muted/10 transition-colors">
+                                    <td class="px-6 py-4 font-bold text-brand-text">
                                         <div class="flex items-center gap-3">
                                             <div
                                                 class="w-8 h-8 rounded-full bg-brand-red/20 flex items-center justify-center text-brand-red font-bold text-xs">
@@ -639,14 +589,14 @@
                                             Alex M.
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 font-mono text-gray-300">#ORD-9991</td>
-                                    <td class="px-6 py-4 text-white">$120.00</td>
+                                    <td class="px-6 py-4 font-mono text-brand-muted">#ORD-9991</td>
+                                    <td class="px-6 py-4 text-brand-text">$120.00</td>
                                     <td class="px-6 py-4"><span
                                             class="text-green-400 text-xs bg-green-500/10 px-2 py-1 rounded border border-green-500/20">Completed</span>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-white/5 transition-colors">
-                                    <td class="px-6 py-4 font-bold text-white">
+                                <tr class="hover:bg-brand-muted/10 transition-colors">
+                                    <td class="px-6 py-4 font-bold text-brand-text">
                                         <div class="flex items-center gap-3">
                                             <div
                                                 class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 font-bold text-xs">
@@ -654,14 +604,14 @@
                                             John D.
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 font-mono text-gray-300">#ORD-9992</td>
-                                    <td class="px-6 py-4 text-white">$345.50</td>
+                                    <td class="px-6 py-4 font-mono text-brand-muted">#ORD-9992</td>
+                                    <td class="px-6 py-4 text-brand-text">$345.50</td>
                                     <td class="px-6 py-4"><span
                                             class="text-yellow-400 text-xs bg-yellow-500/10 px-2 py-1 rounded border border-yellow-500/20">Pending</span>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-white/5 transition-colors">
-                                    <td class="px-6 py-4 font-bold text-white">
+                                <tr class="hover:bg-brand-muted/10 transition-colors">
+                                    <td class="px-6 py-4 font-bold text-brand-text">
                                         <div class="flex items-center gap-3">
                                             <div
                                                 class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 font-bold text-xs">
@@ -669,8 +619,8 @@
                                             Sarah L.
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 font-mono text-gray-300">#ORD-9993</td>
-                                    <td class="px-6 py-4 text-white">$55.00</td>
+                                    <td class="px-6 py-4 font-mono text-brand-muted">#ORD-9993</td>
+                                    <td class="px-6 py-4 text-brand-text">$55.00</td>
                                     <td class="px-6 py-4"><span
                                             class="text-green-400 text-xs bg-green-500/10 px-2 py-1 rounded border border-green-500/20">Completed</span>
                                     </td>
@@ -681,38 +631,38 @@
                 </div>
 
                 <!-- Quick Actions / Top Products -->
-                <div class="bg-brand-gray rounded-xl border border-white/10 p-6">
-                    <h3 class="font-heading text-xl font-bold uppercase mb-6">Top Products</h3>
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center text-2xl">👟
+                <div class="bg-brand-gray rounded-xl border border-brand-border p-5 lg:p-4 xl:p-6">
+                    <h3 class="font-heading text-lg lg:text-xl font-bold uppercase mb-6 truncate" title="Top Products">Top Products</h3>
+                    <div class="space-y-6 lg:space-y-5 xl:space-y-6">
+                        <div class="flex items-center gap-2 sm:gap-4 lg:gap-2 xl:gap-4">
+                            <div class="w-10 h-10 lg:w-11 xl:w-12 h-10 lg:h-11 xl:h-12 bg-brand-muted/10 rounded-lg flex items-center justify-center text-xl lg:text-2xl flex-shrink-0">👟
                             </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm text-white">Pro Runner X</h4>
-                                <p class="text-xs text-gray-400">124 Sales</p>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-bold text-xs lg:text-sm text-brand-text truncate" title="Pro Runner X">Pro Runner X</h4>
+                                <p class="text-[10px] lg:text-xs text-brand-muted truncate">124 Sales</p>
                             </div>
-                            <span class="font-bold text-brand-red">$12,400</span>
+                            <span class="font-bold text-sm lg:text-base text-brand-red flex-shrink-0">$12,400</span>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center text-2xl">👕
+                        <div class="flex items-center gap-2 sm:gap-4 lg:gap-2 xl:gap-4">
+                            <div class="w-10 h-10 lg:w-11 xl:w-12 h-10 lg:h-11 xl:h-12 bg-brand-muted/10 rounded-lg flex items-center justify-center text-xl lg:text-2xl flex-shrink-0">👕
                             </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm text-white">Elite Jersey</h4>
-                                <p class="text-xs text-gray-400">98 Sales</p>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-bold text-xs lg:text-sm text-brand-text truncate" title="Elite Jersey">Elite Jersey</h4>
+                                <p class="text-[10px] lg:text-xs text-brand-muted truncate">98 Sales</p>
                             </div>
-                            <span class="font-bold text-brand-red">$5,600</span>
+                            <span class="font-bold text-sm lg:text-base text-brand-red flex-shrink-0">$5,600</span>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center text-2xl">🏋️
+                        <div class="flex items-center gap-2 sm:gap-4 lg:gap-2 xl:gap-4">
+                            <div class="w-10 h-10 lg:w-11 xl:w-12 h-10 lg:h-11 xl:h-12 bg-brand-muted/10 rounded-lg flex items-center justify-center text-xl lg:text-2xl flex-shrink-0">🏋️
                             </div>
-                            <div class="flex-grow">
-                                <h4 class="font-bold text-sm text-white">Hex Dumbbells</h4>
-                                <p class="text-xs text-gray-400">85 Sales</p>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-bold text-xs lg:text-sm text-brand-text truncate" title="Hex Dumbbells">Hex Dumbbells</h4>
+                                <p class="text-[10px] lg:text-xs text-brand-muted truncate">85 Sales</p>
                             </div>
-                            <span class="font-bold text-brand-red">$3,200</span>
+                            <span class="font-bold text-sm lg:text-base text-brand-red flex-shrink-0">$3,200</span>
                         </div>
                         <button
-                            class="w-full mt-4 bg-brand-dark hover:bg-black border border-white/10 text-white font-bold py-3 rounded-md uppercase tracking-wide transition-colors">View
+                            class="w-full mt-4 bg-brand-dark hover:bg-black border border-brand-border text-brand-text font-bold py-3 rounded-md uppercase tracking-wide transition-colors">View
                             All Products</button>
                     </div>
                 </div>
@@ -721,8 +671,8 @@
             <!-- Additional Admin Sections -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10">
                 <!-- Low Stock Alerts -->
-                <div class="bg-brand-gray rounded-xl border border-white/10 overflow-hidden">
-                    <div class="p-4 sm:p-6 border-b border-white/10 flex justify-between items-center">
+                <div class="bg-brand-gray rounded-xl border border-brand-border overflow-hidden">
+                    <div class="p-4 sm:p-6 border-b border-brand-border flex justify-between items-center">
                         <h3 class="font-heading text-lg sm:text-xl font-bold uppercase">Low Stock Alerts</h3>
                         <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded font-bold">5 Items</span>
                     </div>
@@ -735,13 +685,13 @@
                                     👟
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-sm text-white">Air Max Pro</h4>
-                                    <p class="text-xs text-gray-400">SKU: AM-PRO-001</p>
+                                    <h4 class="font-bold text-sm text-brand-text">Air Max Pro</h4>
+                                    <p class="text-xs text-brand-muted">SKU: AM-PRO-001</p>
                                 </div>
                             </div>
                             <div class="text-right">
                                 <p class="text-red-400 font-bold text-sm">8 left</p>
-                                <p class="text-xs text-gray-500">Reorder now</p>
+                                <p class="text-xs text-brand-muted">Reorder now</p>
                             </div>
                         </div>
                         <div
@@ -752,13 +702,13 @@
                                     ⚽
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-sm text-white">Elite Soccer Ball</h4>
-                                    <p class="text-xs text-gray-400">SKU: SB-ELT-002</p>
+                                    <h4 class="font-bold text-sm text-brand-text">Elite Soccer Ball</h4>
+                                    <p class="text-xs text-brand-muted">SKU: SB-ELT-002</p>
                                 </div>
                             </div>
                             <div class="text-right">
                                 <p class="text-yellow-400 font-bold text-sm">15 left</p>
-                                <p class="text-xs text-gray-500">Low stock</p>
+                                <p class="text-xs text-brand-muted">Low stock</p>
                             </div>
                         </div>
                         <div
@@ -769,22 +719,22 @@
                                     🏋️
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-sm text-white">Resistance Bands Set</h4>
-                                    <p class="text-xs text-gray-400">SKU: RB-SET-003</p>
+                                    <h4 class="font-bold text-sm text-brand-text">Resistance Bands Set</h4>
+                                    <p class="text-xs text-brand-muted">SKU: RB-SET-003</p>
                                 </div>
                             </div>
                             <div class="text-right">
                                 <p class="text-red-400 font-bold text-sm">5 left</p>
-                                <p class="text-xs text-gray-500">Critical</p>
+                                <p class="text-xs text-brand-muted">Critical</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Recent Customer Activities -->
-                <div class="bg-brand-gray rounded-xl border border-white/10 overflow-hidden">
-                    <div class="p-4 sm:p-6 border-b border-white/10">
-                        <h3 class="font-heading text-lg sm:text-xl font-bold uppercase">Customer Activities</h3>
+                <div class="bg-brand-gray rounded-xl border border-brand-border overflow-hidden">
+                    <div class="p-4 sm:p-6 border-b border-brand-border">
+                        <h3 class="font-heading text-lg sm:text-xl font-bold uppercase text-brand-text">Customer Activities</h3>
                     </div>
                     <div class="p-4 sm:p-6 space-y-1">
                         <div class="flex gap-3 sm:gap-4">
@@ -793,12 +743,12 @@
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-500/20 flex items-center justify-center font-bold text-green-400 text-xs sm:text-sm flex-shrink-0">
                                     AM
                                 </div>
-                                <div class="w-1 flex-1 bg-gradient-to-b from-green-500/30 to-white/10 mt-2 min-h-[2rem]"></div>
+                                <div class="w-1 flex-1 bg-gradient-to-b from-green-500/30 to-brand-border/20 mt-2 min-h-[2rem]"></div>
                             </div>
                             <div class="flex-grow pb-4 sm:pb-6">
-                                <h4 class="font-bold text-sm sm:text-base text-white">New Registration</h4>
-                                <p class="text-xs sm:text-sm text-gray-400 mt-1">Alex Martinez signed up</p>
-                                <span class="text-xs text-gray-500 mt-1 block">5 min ago</span>
+                                <h4 class="font-bold text-sm sm:text-base text-brand-text">New Registration</h4>
+                                <p class="text-xs sm:text-sm text-brand-muted mt-1">Alex Martinez signed up</p>
+                                <span class="text-xs text-brand-muted/70 mt-1 block">5 min ago</span>
                             </div>
                         </div>
                         <div class="flex gap-3 sm:gap-4">
@@ -807,12 +757,12 @@
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-red/20 flex items-center justify-center font-bold text-brand-red text-xs sm:text-sm flex-shrink-0">
                                     JD
                                 </div>
-                                <div class="w-1 flex-1 bg-gradient-to-b from-brand-red/30 to-white/10 mt-2 min-h-[2rem]"></div>
+                                <div class="w-1 flex-1 bg-gradient-to-b from-brand-red/30 to-brand-border/20 mt-2 min-h-[2rem]"></div>
                             </div>
                             <div class="flex-grow pb-4 sm:pb-6">
-                                <h4 class="font-bold text-sm sm:text-base text-white">Large Purchase</h4>
-                                <p class="text-xs sm:text-sm text-gray-400 mt-1">John Doe ordered $345 worth of items</p>
-                                <span class="text-xs text-gray-500 mt-1 block">1 hour ago</span>
+                                <h4 class="font-bold text-sm sm:text-base text-brand-text">Large Purchase</h4>
+                                <p class="text-xs sm:text-sm text-brand-muted mt-1">John Doe ordered $345 worth of items</p>
+                                <span class="text-xs text-brand-muted/70 mt-1 block">1 hour ago</span>
                             </div>
                         </div>
                         <div class="flex gap-3 sm:gap-4">
@@ -821,12 +771,12 @@
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-yellow-400 text-xs sm:text-sm flex-shrink-0">
                                     SL
                                 </div>
-                                <div class="w-1 flex-1 bg-gradient-to-b from-yellow-500/30 to-white/10 mt-2 min-h-[2rem]"></div>
+                                <div class="w-1 flex-1 bg-gradient-to-b from-yellow-500/30 to-brand-border/20 mt-2 min-h-[2rem]"></div>
                             </div>
                             <div class="flex-grow pb-4 sm:pb-6">
-                                <h4 class="font-bold text-sm sm:text-base text-white">Product Review</h4>
-                                <p class="text-xs sm:text-sm text-gray-400 mt-1">Sarah Lee left a 5-star review</p>
-                                <span class="text-xs text-gray-500 mt-1 block">3 hours ago</span>
+                                <h4 class="font-bold text-sm sm:text-base text-brand-text">Product Review</h4>
+                                <p class="text-xs sm:text-sm text-brand-muted mt-1">Sarah Lee left a 5-star review</p>
+                                <span class="text-xs text-brand-muted/70 mt-1 block">3 hours ago</span>
                             </div>
                         </div>
                         <div class="flex gap-3 sm:gap-4">
@@ -837,9 +787,9 @@
                                 </div>
                             </div>
                             <div class="flex-grow">
-                                <h4 class="font-bold text-sm sm:text-base text-white">Support Ticket</h4>
-                                <p class="text-xs sm:text-sm text-gray-400 mt-1">Mike Kim opened a support request</p>
-                                <span class="text-xs text-gray-500 mt-1 block">5 hours ago</span>
+                                <h4 class="font-bold text-sm sm:text-base text-brand-text">Support Ticket</h4>
+                                <p class="text-xs sm:text-sm text-brand-muted mt-1">Mike Kim opened a support request</p>
+                                <span class="text-xs text-brand-muted/70 mt-1 block">5 hours ago</span>
                             </div>
                         </div>
                     </div>
@@ -849,18 +799,18 @@
             <!-- Sales by Region & System Notifications -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10">
                 <!-- Sales Analytics by Region -->
-                <div class="lg:col-span-2 bg-brand-gray rounded-xl border border-white/10 p-4 sm:p-6">
-                    <h3 class="font-heading text-lg sm:text-xl font-bold uppercase mb-4 sm:mb-6">Sales by Region</h3>
+                <div class="lg:col-span-2 bg-brand-gray rounded-xl border border-brand-border p-4 sm:p-6">
+                    <h3 class="font-heading text-lg sm:text-xl font-bold uppercase mb-4 sm:mb-6 text-brand-text">Sales by Region</h3>
                     <div class="space-y-3 sm:space-y-4">
                         <div>
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">🇺🇸</span>
-                                    <span class="text-sm font-bold text-white">United States</span>
+                                    <span class="text-sm font-bold text-brand-text">United States</span>
                                 </div>
                                 <span class="text-brand-red font-bold">$18,500</span>
                             </div>
-                            <div class="w-full bg-white/5 rounded-full h-2">
+                            <div class="w-full bg-brand-border/20 rounded-full h-2">
                                 <div class="bg-brand-red h-2 rounded-full shadow-[0_0_8px_#DC2626]" style="width: 85%">
                                 </div>
                             </div>
@@ -869,11 +819,11 @@
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">🇬🇧</span>
-                                    <span class="text-sm font-bold text-white">United Kingdom</span>
+                                    <span class="text-sm font-bold text-brand-text">United Kingdom</span>
                                 </div>
                                 <span class="text-brand-red font-bold">$12,300</span>
                             </div>
-                            <div class="w-full bg-white/5 rounded-full h-2">
+                            <div class="w-full bg-brand-border/20 rounded-full h-2">
                                 <div class="bg-blue-500 h-2 rounded-full shadow-[0_0_6px_#3b82f6]" style="width: 65%">
                                 </div>
                             </div>
@@ -882,11 +832,11 @@
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">🇨🇦</span>
-                                    <span class="text-sm font-bold text-white">Canada</span>
+                                    <span class="text-sm font-bold text-brand-text">Canada</span>
                                 </div>
                                 <span class="text-brand-red font-bold">$9,800</span>
                             </div>
-                            <div class="w-full bg-white/5 rounded-full h-2">
+                            <div class="w-full bg-brand-muted/10 rounded-full h-2">
                                 <div class="bg-green-500 h-2 rounded-full shadow-[0_0_6px_#10b981]" style="width: 50%">
                                 </div>
                             </div>
@@ -895,11 +845,11 @@
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">🇦🇺</span>
-                                    <span class="text-sm font-bold text-white">Australia</span>
+                                    <span class="text-sm font-bold text-brand-text">Australia</span>
                                 </div>
                                 <span class="text-brand-red font-bold">$6,400</span>
                             </div>
-                            <div class="w-full bg-white/5 rounded-full h-2">
+                            <div class="w-full bg-brand-muted/10 rounded-full h-2">
                                 <div class="bg-purple-500 h-2 rounded-full shadow-[0_0_6px_#a855f7]" style="width: 35%">
                                 </div>
                             </div>
@@ -908,11 +858,11 @@
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center gap-3">
                                     <span class="text-2xl">🇩🇪</span>
-                                    <span class="text-sm font-bold text-white">Germany</span>
+                                    <span class="text-sm font-bold text-brand-text">Germany</span>
                                 </div>
                                 <span class="text-brand-red font-bold">$4,200</span>
                             </div>
-                            <div class="w-full bg-white/5 rounded-full h-2">
+                            <div class="w-full bg-brand-muted/10 rounded-full h-2">
                                 <div class="bg-yellow-500 h-2 rounded-full shadow-[0_0_6px_#eab308]" style="width: 25%">
                                 </div>
                             </div>
@@ -921,7 +871,7 @@
                 </div>
 
                 <!-- System Notifications -->
-                <div class="bg-brand-gray rounded-xl border border-white/10 p-6">
+                <div class="bg-brand-gray rounded-xl border border-brand-border p-6">
                     <h3 class="font-heading text-xl font-bold uppercase mb-6">System Alerts</h3>
                     <div class="space-y-4">
                         <div class="p-3 rounded-lg bg-brand-red/10 border border-brand-red/30">
@@ -930,7 +880,7 @@
                                     class="text-brand-red text-xl flex-shrink-0 mt-0.5"></ion-icon>
                                 <div>
                                     <h4 class="font-bold text-xs text-brand-red uppercase">Payment Failed</h4>
-                                    <p class="text-xs text-gray-400 mt-1">Order #9876 payment declined</p>
+                                    <p class="text-xs text-brand-muted mt-1">Order #9876 payment declined</p>
                                 </div>
                             </div>
                         </div>
@@ -940,7 +890,7 @@
                                     class="text-yellow-400 text-xl flex-shrink-0 mt-0.5"></ion-icon>
                                 <div>
                                     <h4 class="font-bold text-xs text-yellow-400 uppercase">Server Load</h4>
-                                    <p class="text-xs text-gray-400 mt-1">80% capacity reached</p>
+                                    <p class="text-xs text-brand-muted mt-1">80% capacity reached</p>
                                 </div>
                             </div>
                         </div>
@@ -950,7 +900,7 @@
                                     class="text-green-400 text-xl flex-shrink-0 mt-0.5"></ion-icon>
                                 <div>
                                     <h4 class="font-bold text-xs text-green-400 uppercase">Backup Complete</h4>
-                                    <p class="text-xs text-gray-400 mt-1">Daily backup successful</p>
+                                    <p class="text-xs text-brand-muted mt-1">Daily backup successful</p>
                                 </div>
                             </div>
                         </div>
@@ -960,7 +910,7 @@
                                     class="text-blue-400 text-xl flex-shrink-0 mt-0.5"></ion-icon>
                                 <div>
                                     <h4 class="font-bold text-xs text-blue-400 uppercase">Update Available</h4>
-                                    <p class="text-xs text-gray-400 mt-1">Version 2.5.0 ready</p>
+                                    <p class="text-xs text-brand-muted mt-1">Version 2.5.0 ready</p>
                                 </div>
                             </div>
                         </div>
@@ -971,76 +921,6 @@
         </div>
     </main>
 
-    <footer class="dashboard-footer bg-black border-t border-white/10 pt-12 sm:pt-16 pb-8 mt-auto ltr:lg:ml-64 rtl:lg:mr-64">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
-                <!-- Branding -->
-                <div class="sm:col-span-2 lg:col-span-1">
-                    <a href="index.html" class="flex items-center gap-2 mb-4">
-                        <ion-icon name="flash" class="text-3xl text-brand-red"></ion-icon>
-                        <span class="font-heading text-2xl font-bold tracking-wider">TITAN<span
-                                class="text-brand-red">SPORTS</span></span>
-                    </a>
-                    <p class="text-gray-500 text-sm mb-6">
-                        Equipping athletes with world-class gear. Designed for performance, built for champions.
-                    </p>
-                    <!-- Social Icons -->
-                    <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
-                            <ion-icon name="logo-instagram"></ion-icon>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
-                            <ion-icon name="logo-twitter"></ion-icon>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
-                            <ion-icon name="logo-youtube"></ion-icon>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">
-                            <ion-icon name="logo-facebook"></ion-icon>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Shop Links -->
-                <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Shop</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="shop.html" class="hover:text-brand-red transition-colors">All Products</a></li>
-                        <li><a href="#" class="hover:text-brand-red transition-colors">New Arrivals</a></li>
-                        <li><a href="#" class="hover:text-brand-red transition-colors">Best Sellers</a></li>
-                        <li><a href="offers.html" class="hover:text-brand-red transition-colors">Special Offers</a></li>
-                    </ul>
-                </div>
-
-                <!-- Company Links -->
-                <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Company</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="about.html" class="hover:text-brand-red transition-colors">About Us</a></li>
-                        <li><a href="contact.html" class="hover:text-brand-red transition-colors">Contact</a></li>
-                        <li><a href="categories.html" class="hover:text-brand-red transition-colors">Categories</a></li>
-                        <li><a href="#" class="hover:text-brand-red transition-colors">Privacy Policy</a></li>
-                    </ul>
-                </div>
-
-                <!-- Newsletter -->
-                <div>
-                    <h4 class="font-heading text-lg font-bold uppercase mb-4">Newsletter</h4>
-                    <p class="text-gray-500 text-sm mb-4">Subscribe for updates and exclusive offers.</p>
-                    <div class="flex flex-col gap-3">
-                        <input type="email" placeholder="Enter your email"
-                            class="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-red transition-colors">
-                        <button
-                            class="bg-brand-red hover:bg-red-700 text-white font-bold py-2 rounded-md uppercase tracking-wide text-sm transition-colors">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center pt-8 border-t border-white/10 text-gray-600 text-xs">
-                &copy; 2024 Titan Sports. All rights reserved.
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
     <script>
